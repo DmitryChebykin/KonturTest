@@ -1,14 +1,16 @@
-import Util.FileMeasureReader;
+import controller.HttpPostService;
+import util.FileMeasureReader;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+
+
 
 public class Application {
 
-
-
     public void Run(String path) {
-        System.out.println(path);
+        new HttpPostService().StartUp();
+
+
         FileMeasureReader fmr = new FileMeasureReader();
         try {
             fmr.ReadCSVbyScanner("/file.csv");
@@ -16,5 +18,7 @@ public class Application {
             e.printStackTrace();
         }
 
+
     }
+
 }

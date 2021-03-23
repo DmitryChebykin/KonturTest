@@ -1,6 +1,6 @@
-package Util;
+package util;
 
-import Service.CalcResponsePostService;
+import service.CalcResponsePostService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,8 +8,8 @@ import java.util.*;
 
 public class FileMeasureReader {
 
-    //private ArrayList<String[]> records;
-    //private String FileMeasurePath;
+    public ArrayList<String[]> records;
+
 
     public void ReadCSVbyScanner(String FileMeasurePath) throws FileNotFoundException {
         List<String[]> records = new ArrayList<>();
@@ -26,21 +26,21 @@ public class FileMeasureReader {
                     String data = dataScanner.next();
                     if (index < 3){
                     line[index] = data;
-                        System.out.println(line[index]);
+
                     }
                     else
                         System.out.println("invalid data::" + data);
                     index++;
                 }
-                System.out.println(Arrays.toString(line));
+
                 records.add(line);
             }
-            CalcResponsePostService calcResponsePostService = new CalcResponsePostService();
-            calcResponsePostService.filingDB(records);
-            for (int i = 0; i < records.size(); i++) {
-                System.out.println(Arrays.toString(records.get(i)));
 
-            }
+            CalcResponsePostService calcResponsePostService = new CalcResponsePostService();
+            //calcResponsePostService.filingDB(records);
+
+            double res = calcResponsePostService.ReturnRatioOfTwoMeasure("миля","удав",records);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
