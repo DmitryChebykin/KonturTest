@@ -1,6 +1,5 @@
 package service;
 
-import dto.RequestDto;
 import repository.H2MemoryDatabase;
 import config.BootStrap;
 
@@ -23,30 +22,28 @@ public class CalcResponsePostService {
         h2MemoryDatabase.AddArrayListToTable(records);
     }
 
-    public String getResult(RequestDto input) {
 
-        String[] arrMeasureFrom = parse(input.getFrom());
-        String[] arrMeasureTo = parse(input.getFrom());
-
-        int froms = h2MemoryDatabase.getCountFroms();
-        int tos = h2MemoryDatabase.getCountTos();
-
-        if (froms == 0 && tos == 0) {
-            System.out.println("Error");
-            throw new NullPointerException();
-        }
-
-        if (arrMeasureFrom.length != arrMeasureTo.length) {
-            System.out.println("Error");
-            throw new ArithmeticException();
-        }
-
-
-        return null;
-    }
-
-    private String[] parse(String from) {
-        return null;
+    public ArrayList<SortedSet> parse(String stringMeasuresExpression) {
+        String someString;
+        SortedSet<String>  num = new TreeSet<String>();
+        SortedSet<String>  denom = new TreeSet<String>();
+        List exprList = new ArrayList<String[]>();
+        //someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
+        someString = stringMeasuresExpression;
+        String[] arrString = someString.split("/");
+        String numeratorString = arrString[0].replaceAll("\\s|\\*", " ");
+        String denominatorString = arrString[1].replaceAll("\\s|\\*", " ");
+        numeratorString = numeratorString.trim();
+        denominatorString = denominatorString.trim();
+        String[] numerator = numeratorString.split("[\\s]+");
+        String[] denominator = denominatorString.split("[\\s]+");
+        num.addAll(Arrays.asList(numerator));
+        denom.addAll(Arrays.asList(denominator));
+        System.out.println();
+        exprList.add(num);
+        exprList.add(denom);
+        System.out.println();
+        return (ArrayList<SortedSet>) exprList;
     }
 
     public SortedSet DefineAllOtherMeasure(String measure, List<String[]> list) {

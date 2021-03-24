@@ -81,12 +81,4 @@ public class H2MemoryDatabase {
 
     }
 
-    public int getCountFroms() {
-        return 0;
-    }
-
-    public int getCountTos() {
-        return 0;
-    }
-
 }

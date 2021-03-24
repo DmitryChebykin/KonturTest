@@ -37,9 +37,10 @@ public class FileMeasureReader {
             }
 
             CalcResponsePostService calcResponsePostService = new CalcResponsePostService();
-            //calcResponsePostService.filingDB(records);
+
 
             double res = calcResponsePostService.ReturnRatioOfTwoMeasure("миля","удав",records);
+            calcResponsePostService.parse("   км * м *     с* ч /     миля * попугай *     удав * сажень");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
