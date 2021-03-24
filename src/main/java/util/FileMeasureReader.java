@@ -40,7 +40,13 @@ public class FileMeasureReader {
 
 
             double res = calcResponsePostService.ReturnRatioOfTwoMeasure("миля","удав",records);
-            calcResponsePostService.parse("   км * м *     с* ч /     миля * попугай *     удав * сажень");
+            ArrayList<SortedSet> exprList = new ArrayList<SortedSet>();
+            //exprList = calcResponsePostService.parse("   км * м *     сек* час /     миля * попугай *     удав * сажень");
+            exprList = calcResponsePostService.parse("   км * м *     сек* час /     км * м *     сек* час");
+
+            boolean check = calcResponsePostService.IsConversionAvailabilityByTypesOfMeasures(exprList,exprList, records);
+            boolean check1 = calcResponsePostService.IsConversionAvailabilityByCountsOfMeasures(exprList,exprList, records);
+            boolean check2 = calcResponsePostService.IsConversionPossibleByExpression(exprList,exprList, records);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

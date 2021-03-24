@@ -119,9 +119,6 @@ public class CalcResponsePostService {
         return ratio;
         }
 
-
-
-
     public  List<Integer> ReturnAdditionalRowsWithOtherMeasure(List<String[]> fullList, int numberCurrentRow, String otherMeasure) {
         List<Integer> listIndex = new ArrayList();
         for (int i = 0; i < fullList.size(); i++) {
@@ -133,6 +130,7 @@ public class CalcResponsePostService {
         }
         return listIndex;
     }
+
     public  List<Integer> ReturnAllRowsWithThisMeasure(List<String[]> fullList, String otherMeasure) {
         List<Integer> listIndex = new ArrayList();
         for (int i = 0; i < fullList.size(); i++) {
@@ -143,6 +141,7 @@ public class CalcResponsePostService {
         }
         return listIndex;
     }
+
     public boolean IsMeasureInRow(String row[], String measure){
         if (measure.equals(row[0]) || measure.equals(row[1]) ) return true;
         return false;
@@ -190,5 +189,85 @@ public class CalcResponsePostService {
         System.out.println("ratio = " + ratio);
         return 0f;
     }
+
+    public boolean IsConversionAvailabilityByTypesOfMeasures(ArrayList<SortedSet> from, ArrayList<SortedSet> to, List<String[]> list){
+        boolean availability = true;
+        Set<String> measuresInRequest = new HashSet<String>();
+        measuresInRequest.addAll(from.get(0));
+        measuresInRequest.addAll(from.get(1));
+        measuresInRequest.addAll(to.get(0));
+        measuresInRequest.addAll(to.get(1));
+
+        for (String measure : measuresInRequest) {
+            boolean temp = false;
+            for (int j = 0; j < list.size(); j++){
+            String[] e = list.get(j);
+            if (e[0].equals(measure) || e[1].equals(measure))
+            { temp = temp || true;
+                    break;
+                }
+            else {temp = temp || false;}
+            }
+            if(temp)
+            {availability = availability & temp;}
+            else
+            {availability = false;
+            break;}
+        }
+        System.out.println();
+        return availability;
+    }
+
+    public boolean IsConversionAvailabilityByCountsOfMeasures(ArrayList<SortedSet> from, ArrayList<SortedSet> to, List<String[]> list){
+
+        if (from.get(0).size() != to.get(0).size()) {
+            return false;
+        } else if (from.get(1).size() != to.get(1).size()) {
+            return false;
+        }
+        return true;
+    }
+    public boolean IsConversionPossibleByExpression(ArrayList<SortedSet> from, ArrayList<SortedSet> to, List<String[]> list){
+        Set<String> temp = new HashSet<String>();
+        SortedSet<String> example = new TreeSet<String>();
+        List<String> tempList = new LinkedList<String>();
+        List typesMeasureUp = new ArrayList<LinkedList>();
+        List typesMeasureDown = new ArrayList<LinkedList>();
+
+        temp.addAll(from.get(0));
+
+        for(String e: temp){
+            example = DefineAllOtherMeasure(e, list);
+            tempList.addAll(example);
+            typesMeasureUp.add(tempList);
+            tempList = new LinkedList<String>();}
+
+
+        tempList = new LinkedList<String>();
+        temp.clear();
+        temp.addAll(from.get(1));
+
+
+        for(String e: temp){
+            example = DefineAllOtherMeasure(e, list);
+            tempList.addAll(example);
+            typesMeasureDown.add(tempList);
+            tempList = new LinkedList<String>();}
+
+        System.out.println();
+        Collections.sort(typesMeasureUp, new ListSorter());
+        Collections.sort(typesMeasureDown, new ListSorter());
+        if(Objects.deepEquals(typesMeasureUp, typesMeasureDown)) {
+            int test = 123;
+            System.out.println(test);
+        };
+        int test2 = 222;
+
+
+        List<SortedSet> typesOfMeasures = new ArrayList<SortedSet>();
+
+    return  false;
+    }
+
 
 }
