@@ -12,9 +12,7 @@ public class ListSorter implements Comparator <LinkedList>{
     }
 
     @Override
-    public Comparator reversed(
-
-    ) {
+    public Comparator reversed() {
         return null;
     }
 }

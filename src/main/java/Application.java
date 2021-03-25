@@ -1,5 +1,5 @@
 import controller.HttpPostService;
-import util.FileMeasureReader;
+import util.FileReader;
 
 import java.io.FileNotFoundException;
 
@@ -11,7 +11,7 @@ public class Application {
         new HttpPostService().StartUp();
 
 
-        FileMeasureReader fmr = new FileMeasureReader();
+        FileReader fmr = new FileReader();
         try {
             fmr.ReadCSVbyScanner("/file.csv");
         } catch (FileNotFoundException e) {

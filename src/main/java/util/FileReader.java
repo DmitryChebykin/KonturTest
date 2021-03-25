@@ -1,12 +1,12 @@
 package util;
 
-import service.CalcResponsePostService;
+import repository.DB;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class FileMeasureReader {
+public class FileReader {
 
     public ArrayList<String[]> records;
 
@@ -36,17 +36,22 @@ public class FileMeasureReader {
                 records.add(line);
             }
 
-            CalcResponsePostService calcResponsePostService = new CalcResponsePostService();
+            DB dbObject = new DB();
+            dbObject.setDataRules((ArrayList<String[]>) records);
+            dbObject.setGroupsMeasures();
+            dbObject.setTableTypeMeasures();
+
+            //CalcResponsePostService calcResponsePostService = new CalcResponsePostService();
 
 
-            double res = calcResponsePostService.ReturnRatioOfTwoMeasure("миля","удав",records);
-            ArrayList<SortedSet> exprList = new ArrayList<SortedSet>();
+            //double res = calcResponsePostService.ReturnRatioOfTwoMeasure("миля","удав",records);
+            //ArrayList<SortedSet> exprList = new ArrayList<SortedSet>();
             //exprList = calcResponsePostService.parse("   км * м *     сек* час /     миля * попугай *     удав * сажень");
-            exprList = calcResponsePostService.parse("   км * м *     сек* час /     км * м *     сек* час");
+            //exprList = calcResponsePostService.parse("   км * м *     сек* час /     км * м *     сек* час");
 
-            boolean check = calcResponsePostService.IsConversionAvailabilityByTypesOfMeasures(exprList,exprList, records);
-            boolean check1 = calcResponsePostService.IsConversionAvailabilityByCountsOfMeasures(exprList,exprList, records);
-            boolean check2 = calcResponsePostService.IsConversionPossibleByExpression(exprList,exprList, records);
+            //boolean check = calcResponsePostService.IsConversionAvailabilityByTypesOfMeasures(exprList, exprList, records);
+            //boolean check1 = calcResponsePostService.IsConversionAvailabilityByCountsOfMeasures(exprList, exprList, records);
+            //boolean check2 = calcResponsePostService.IsConversionPossibleByExpression(exprList, exprList, records);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -1,8 +1,5 @@
 package service;
 
-import repository.H2MemoryDatabase;
-import config.BootStrap;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -11,22 +8,13 @@ public class CalcResponsePostService {
 
     String[] DTOHandlerResult;
 
-    private H2MemoryDatabase h2MemoryDatabase;
 
-    public CalcResponsePostService() {
-        this.h2MemoryDatabase = new H2MemoryDatabase();
-        BootStrap.Init();
-    }
-
-    public void filingDB(List<String[]> records) {
-        h2MemoryDatabase.AddArrayListToTable(records);
-    }
 
 
     public ArrayList<SortedSet> parse(String stringMeasuresExpression) {
         String someString;
-        SortedSet<String>  num = new TreeSet<String>();
-        SortedSet<String>  denom = new TreeSet<String>();
+        SortedSet<String> num = new TreeSet<String>();
+        SortedSet<String> denom = new TreeSet<String>();
         List exprList = new ArrayList<String[]>();
         //someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
         someString = stringMeasuresExpression;
@@ -91,47 +79,48 @@ public class CalcResponsePostService {
         String secondMeasure;
         String currentMeasure = measure1;
         queue.addAll(ReturnAllRowsWithThisMeasure(list, currentMeasure));
-        while (queue.size()!= 0) {
+        while (queue.size() != 0) {
             int i = queue.getFirst();
-            if(startRow == -1) startRow = i;
-            if(IsMeasureInRow(list.get(i), measure2)) {finalRow = i; break;}
-            else{
-    //            System.out.println(Arrays.toString(list.get(i)));
-            secondMeasure = GetAnotherMeasureInRow(i, currentMeasure, list);
-            visitedRow.add(i);
-            queue.removeFirst();
-            childs = ReturnAdditionalRowsWithOtherMeasure(list,i,secondMeasure);
-            for (Integer e: childs){
-                parentChild.add(new int[]{e.intValue(), i});
+            if (startRow == -1) startRow = i;
+            if (IsMeasureInRow(list.get(i), measure2)) {
+                finalRow = i;
+                break;
+            } else {
+                //            System.out.println(Arrays.toString(list.get(i)));
+                secondMeasure = GetAnotherMeasureInRow(i, currentMeasure, list);
+                visitedRow.add(i);
+                queue.removeFirst();
+                childs = ReturnAdditionalRowsWithOtherMeasure(list, i, secondMeasure);
+                for (Integer e : childs) {
+                    parentChild.add(new int[]{e.intValue(), i});
+                }
+                queue.addAll(childs);
+                currentMeasure = secondMeasure;
             }
-            queue.addAll(childs);
-            currentMeasure = secondMeasure;}
 
 
         }
         System.out.println("Start row : " + startRow + " " + Arrays.toString(list.get(startRow)));
         System.out.println("End row : " + finalRow + " " + Arrays.toString(list.get(finalRow)));
         LinkedList<Integer> way = buildWayFromStartRowToFinalRow(parentChild, startRow, finalRow);
-        for (Integer e: way){
+        for (Integer e : way) {
             System.out.println(Arrays.toString(list.get(e)));
         }
         double ratio = getRatio(measure2, way, list);
         return ratio;
-        }
+    }
 
-    public  List<Integer> ReturnAdditionalRowsWithOtherMeasure(List<String[]> fullList, int numberCurrentRow, String otherMeasure) {
+    public List<Integer> ReturnAdditionalRowsWithOtherMeasure(List<String[]> fullList, int numberCurrentRow, String otherMeasure) {
         List<Integer> listIndex = new ArrayList();
         for (int i = 0; i < fullList.size(); i++) {
-            String[] e = fullList.get(i);
-            if (i == numberCurrentRow) continue;
-            else if (e[0].equals(otherMeasure) || e[1].equals(otherMeasure)) {
+           if ((fullList.get(i)[0].equals(otherMeasure) || fullList.get(i)[1].equals(otherMeasure)) && i != numberCurrentRow) {
                 listIndex.add(i);
             }
         }
         return listIndex;
     }
 
-    public  List<Integer> ReturnAllRowsWithThisMeasure(List<String[]> fullList, String otherMeasure) {
+    public List<Integer> ReturnAllRowsWithThisMeasure(List<String[]> fullList, String otherMeasure) {
         List<Integer> listIndex = new ArrayList();
         for (int i = 0; i < fullList.size(); i++) {
             String[] e = fullList.get(i);
@@ -142,30 +131,30 @@ public class CalcResponsePostService {
         return listIndex;
     }
 
-    public boolean IsMeasureInRow(String row[], String measure){
-        if (measure.equals(row[0]) || measure.equals(row[1]) ) return true;
+    public boolean IsMeasureInRow(String row[], String measure) {
+        if (measure.equals(row[0]) || measure.equals(row[1])) return true;
         return false;
     }
 
-    public String GetAnotherMeasureInRow(int rowNumber, String InitMeasure, List<String[]> list){
-    String[] convertString = list.get(rowNumber);
-    String AnotherMeasureInRow;
-    if(convertString[0].equals(InitMeasure)) AnotherMeasureInRow = convertString[1];
+    public String GetAnotherMeasureInRow(int rowNumber, String InitMeasure, List<String[]> list) {
+        String[] convertString = list.get(rowNumber);
+        String AnotherMeasureInRow;
+        if (convertString[0].equals(InitMeasure)) AnotherMeasureInRow = convertString[1];
         else AnotherMeasureInRow = convertString[0];
         return AnotherMeasureInRow;
     }
 
-    public LinkedList <Integer> buildWayFromStartRowToFinalRow (List<int[]> parentChild, int startRow, int finalRow){
+    public LinkedList<Integer> buildWayFromStartRowToFinalRow(List<int[]> parentChild, int startRow, int finalRow) {
         LinkedList<Integer> way = new LinkedList<Integer>();
         List<int[]> filteredList = new ArrayList<int[]>();
         way.add(finalRow);
-        int childRow =  finalRow;
+        int childRow = finalRow;
         int parentRow = -1;
         int[] element;
-        while (!(way.getLast().equals(startRow))){
+        while (!(way.getLast().equals(startRow))) {
             int finalChildRow = childRow;
             filteredList = parentChild.stream().filter(e -> e[0] == finalChildRow).collect(Collectors.toList());
-            element  = filteredList.get(0);
+            element = filteredList.get(0);
             parentRow = element[1];
             way.add(parentRow);
             childRow = parentRow;
@@ -173,24 +162,27 @@ public class CalcResponsePostService {
         return way;
     }
 
-    public double getRatio(String measure2, LinkedList <Integer> way, List<String[]> list){
+    public double getRatio(String measure2, LinkedList<Integer> way, List<String[]> list) {
         double ratio = 1.0f;
         double ratioTemp = 1.0f;
         String childMeasure;
         String[] element;
         childMeasure = measure2;
-        for (Integer e : way){
+        for (Integer e : way) {
             element = list.get(e);
             ratioTemp = Double.parseDouble(element[2]);
-            if(childMeasure.equals(element[0])){ratio = ratio/ratioTemp;}
-            else{ratio = ratio*ratioTemp;}
+            if (childMeasure.equals(element[0])) {
+                ratio = ratio / ratioTemp;
+            } else {
+                ratio = ratio * ratioTemp;
+            }
             childMeasure = GetAnotherMeasureInRow(e, childMeasure, list);
         }
         System.out.println("ratio = " + ratio);
         return 0f;
     }
 
-    public boolean IsConversionAvailabilityByTypesOfMeasures(ArrayList<SortedSet> from, ArrayList<SortedSet> to, List<String[]> list){
+    public boolean IsConversionAvailabilityByTypesOfMeasures(ArrayList<SortedSet> from, ArrayList<SortedSet> to, List<String[]> list) {
         boolean availability = true;
         Set<String> measuresInRequest = new HashSet<String>();
         measuresInRequest.addAll(from.get(0));
@@ -200,25 +192,27 @@ public class CalcResponsePostService {
 
         for (String measure : measuresInRequest) {
             boolean temp = false;
-            for (int j = 0; j < list.size(); j++){
-            String[] e = list.get(j);
-            if (e[0].equals(measure) || e[1].equals(measure))
-            { temp = temp || true;
+            for (int j = 0; j < list.size(); j++) {
+                String[] e = list.get(j);
+                if (e[0].equals(measure) || e[1].equals(measure)) {
+                    temp = temp || true;
                     break;
+                } else {
+                    temp = temp || false;
                 }
-            else {temp = temp || false;}
             }
-            if(temp)
-            {availability = availability & temp;}
-            else
-            {availability = false;
-            break;}
+            if (temp) {
+                availability = availability & temp;
+            } else {
+                availability = false;
+                break;
+            }
         }
         System.out.println();
         return availability;
     }
 
-    public boolean IsConversionAvailabilityByCountsOfMeasures(ArrayList<SortedSet> from, ArrayList<SortedSet> to, List<String[]> list){
+    public boolean IsConversionAvailabilityByCountsOfMeasures(ArrayList<SortedSet> from, ArrayList<SortedSet> to, List<String[]> list) {
 
         if (from.get(0).size() != to.get(0).size()) {
             return false;
@@ -227,7 +221,15 @@ public class CalcResponsePostService {
         }
         return true;
     }
-    public boolean IsConversionPossibleByExpression(ArrayList<SortedSet> from, ArrayList<SortedSet> to, List<String[]> list){
+
+    public boolean IsConversionPossibleByCountsOfMeasure(ArrayList<SortedSet> from, ArrayList<SortedSet> to, List<String[]> list) {
+        // Метод проверяет возможность преобразования по соотетствию типов переменных.
+        // Особенности:
+        // Метод работает с  проверенными  from: и  to:, т.е. на раннем этапе мы уже убедились, что
+        // в теле запроса содержатся корректные единицы измерения (они есть в нашей базе в файле files.csv),
+        // и количество переменных в числителях(знаменателях) у from: и to: - одинаковое.
+        // Метод проверяет, а одинаковый ли набор типов единиц измерения в числителях/знаменателях.
+        // Например в числителе from
         Set<String> temp = new HashSet<String>();
         SortedSet<String> example = new TreeSet<String>();
         List<String> tempList = new LinkedList<String>();
@@ -236,11 +238,12 @@ public class CalcResponsePostService {
 
         temp.addAll(from.get(0));
 
-        for(String e: temp){
+        for (String e : temp) {
             example = DefineAllOtherMeasure(e, list);
             tempList.addAll(example);
             typesMeasureUp.add(tempList);
-            tempList = new LinkedList<String>();}
+            tempList = new LinkedList<String>();
+        }
 
 
         tempList = new LinkedList<String>();
@@ -248,25 +251,27 @@ public class CalcResponsePostService {
         temp.addAll(from.get(1));
 
 
-        for(String e: temp){
+        for (String e : temp) {
             example = DefineAllOtherMeasure(e, list);
             tempList.addAll(example);
             typesMeasureDown.add(tempList);
-            tempList = new LinkedList<String>();}
+            tempList = new LinkedList<String>();
+        }
 
         System.out.println();
         Collections.sort(typesMeasureUp, new ListSorter());
         Collections.sort(typesMeasureDown, new ListSorter());
-        if(Objects.deepEquals(typesMeasureUp, typesMeasureDown)) {
+        if (Objects.deepEquals(typesMeasureUp, typesMeasureDown)) {
             int test = 123;
             System.out.println(test);
-        };
+        }
+        ;
         int test2 = 222;
 
 
         List<SortedSet> typesOfMeasures = new ArrayList<SortedSet>();
 
-    return  false;
+        return false;
     }
 
 
