@@ -5,11 +5,9 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import controller.AppController;
 import dto.RequestDto;
-import service.CalcResponsePostService;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 public class AppHttpHandler implements HttpHandler {
 

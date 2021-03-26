@@ -42,7 +42,7 @@ public class FileReader {
             dbObject.setTableTypeMeasures();
             dbObject.getIndexesFilteredRows("удав");
 
-            //CalcResponsePostService calcResponsePostService = new CalcResponsePostService();
+            //PostService calcResponsePostService = new PostService();
 
 
             //double res = calcResponsePostService.ReturnRatioOfTwoMeasure("миля","удав",records);

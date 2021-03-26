@@ -6,9 +6,8 @@ import java.util.*;
 
 public class handlerDB {
 
-    public LinkedList<Integer> getConversionRows(String measureFrom, String measureTo, DB db) {
+    public List<int[]> getConversionRows(String measureFrom, String measureTo, DB db) {
         LinkedList<Integer> queue = new LinkedList<Integer>();
-
         int ToRow = -1;
         int FromRow = -1;
         String startMsr = measureFrom;
@@ -18,7 +17,7 @@ public class handlerDB {
         while (queue.size() != 0) {
             addNextRowsToQueue(queue, db, nextMsr, measureTo, pool);
         }
-        return queue;
+        return pool.linkedRows;
     }
 
     private void addNextRowsToQueue(LinkedList<Integer> queue, DB db, String nextMsr, String measureTo, Pool pool) {
@@ -37,9 +36,10 @@ public class handlerDB {
                 for (Integer nextIndex : pool.childs) {
                     pool.linkedRows.add(new int[]{nextIndex, currentIndex});
                 }
+                queue.addAll(pool.childs);
+
             }
         }
-        int currentIndex = queue.getFirst();
     }
 
     private class  Pool{

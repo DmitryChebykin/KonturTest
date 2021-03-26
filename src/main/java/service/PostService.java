@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class CalcResponsePostService {
+public class PostService {
 
     String[] DTOHandlerResult;
 
