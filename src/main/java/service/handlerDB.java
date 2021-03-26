@@ -33,8 +33,10 @@ public class handlerDB {
                 currentMsr = db.getPair(nextMsr, currentIndex);
                 queue.removeFirst();
                 pool.childs = db.getIndexesFilteredRows(currentMsr);
-                pool.childs.removeIf()
-
+                pool.childs.removeIf(number -> number == currentIndex);
+                for (Integer nextIndex : pool.childs) {
+                    pool.linkedRows.add(new int[]{nextIndex, currentIndex});
+                }
             }
         }
         int currentIndex = queue.getFirst();
