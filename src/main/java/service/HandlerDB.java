@@ -36,18 +36,18 @@ public class HandlerDB {
                 //System.out.println("////////////////////////////");
 
                 for (Integer nextIndex : pool.tempChilds) {
-                    int[] el = {nextIndex.intValue(), currentIndex};
-                    pool.linkedRows.add(el);
+                    //new int[] el = {nextIndex.intValue(), currentIndex};
+                    pool.linkedRows.add(new int[] {nextIndex.intValue(), currentIndex});
                     stack.put(nextIndex, otherMeasure);
                 }
             }
 
         }
-        for (int[] e : pool.linkedRows) {
-            System.out.println("Итерация № " + pool.linkedRows.indexOf(e));
-            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[0])));
-            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[1])));
-        }
+//        for (int[] e : pool.linkedRows) {
+//            System.out.println("Итерация № " + pool.linkedRows.indexOf(e));
+//            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[0])));
+//            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[1])));
+//        }
         return pool.linkedRows;
     }
 
@@ -56,54 +56,52 @@ public class HandlerDB {
         double ratioTemp = 1.0f;
         String iterateMeasure;
         String[] element;
-        //iterateMeasure = measureFrom;
+        iterateMeasure = measureTo;
         LinkedList<int[]> conversionSteps = (LinkedList<int[]>) getConversionRows(measureFrom, measureTo, db);
-        int[] start = conversionSteps.getLast();
-        //conversionSteps.removeLast();
-        iterateMeasure = db.getDataRules().get(start[0])[0];
-        //conversionSteps.removeFirst();
-        while (!(conversionSteps.indexOf(start) == 0 )) {
-            //System.out.println(Arrays.toString(start));
-            List<int[]> filteredList;
-            List<int[]> list = new ArrayList<>();
-            for (int[] e : conversionSteps) {
-                if (e[0] == start[1]) {
-                    list.add(e);
-                }
-            }
-            filteredList = list;
-            int[] filteredElement = filteredList.get(0);
-            start = filteredElement;
-            element = db.getDataRules().get(filteredElement[0]);
+        ArrayList<Integer> temp = normaliseLinkedRows(conversionSteps);
+        for (Integer e : temp) {
+            element = db.getDataRules().get(e);
             ratioTemp = Double.parseDouble(element[2]);
             if (iterateMeasure.equals(element[0])) {
                 iterateMeasure = element[1];
-                ratio = ratio * ratioTemp;
-            } else {
                 ratio = ratio / ratioTemp;
+            } else {
+                ratio = ratio * ratioTemp;
                 iterateMeasure = element[0];
             }
-
-
-//        }
-//        for (int[] e : conversionSteps) {
-//            element = db.getDataRules().get(e);
-//            ratioTemp = Double.parseDouble(element[2]);
-//            if (childMeasure.equals(element[0])) {
-//                ratio = ratio / ratioTemp;
-//            } else {
-//                ratio = ratio * ratioTemp;
-//            }
-//            childMeasure = GetAnotherMeasureInRow(e, childMeasure, list);
-//        }
-//        System.out.println("ratio = " + ratio);
-            //System.out.println(ratio);
-
+            if(temp.get(0).equals(temp.get(1)))break;
+            System.out.println(ratio);
         }
-        ratio = 1f/ratio;
+
+        //ratio = 1/ratio;
         System.out.println("преобразование " + measureFrom + "   "+measureTo);
         System.out.println("final ratio = " + ratio);
         return ratio;
+    }
+    
+    public ArrayList<Integer> normaliseLinkedRows(LinkedList<int[]> linkedRows) {
+        int[] array;
+        ArrayList<Integer> normalise = new ArrayList<Integer>();
+        array = linkedRows.removeLast();
+        normalise.add(array[0]);
+        int tem1 = -2;
+        if(normalise.isEmpty()){return normalise;}
+        else{
+            int[] finalArray = array;
+            List<int[]> nextElenent = linkedRows.stream().filter(e -> e[0] == finalArray[0]).collect(Collectors.toList());
+            while(!(tem1==0)){
+                normalise.add(nextElenent.get(0)[1]);
+                int i = nextElenent.get(0)[1];
+                nextElenent = linkedRows.stream().filter(e -> e[0] == i).collect(Collectors.toList());
+                if(nextElenent.isEmpty())break;
+                tem1 = linkedRows.indexOf(nextElenent.get(0));
+
+            }
+            return normalise;
+        }
+
+
+
     }
         private class Pool {
             List<int[]> linkedRows;

@@ -44,7 +44,8 @@ public class FileReader {
             dbObject.setTableTypeMeasures();
             dbObject.getIndexesFilteredRows("удав");
             HandlerDB handlerDb = new HandlerDB();
-            handlerDb.getConversionRows("foot", "сажень", dbObject);
+//            handlerDb.getConversionRows("foot", "сажень", dbObject);
+
             handlerDb.getRatio("foot", "сажень", dbObject);
             handlerDb.getRatio("foot", "см", dbObject);
             handlerDb.getRatio("foot", "мм", dbObject);
@@ -52,11 +53,11 @@ public class FileReader {
             handlerDb.getRatio("foot", "м", dbObject);
             handlerDb.getRatio("foot", "дюйм", dbObject);
             handlerDb.getRatio("мм", "м", dbObject);
-            handlerDb.getRatio("мм", "дюйм", dbObject);
+           handlerDb.getRatio("мм", "дюйм", dbObject);
             handlerDb.getRatio("дюйм", "мм", dbObject);
             handlerDb.getRatio("локоть", "мм", dbObject);
             handlerDb.getRatio("кабельтов", "мм", dbObject);
-            handlerDb.getRatio("локоть", "мм", dbObject);
+            handlerDb.getRatio("удав", "foot", dbObject);
 
 
             PostService postService = new PostService();
