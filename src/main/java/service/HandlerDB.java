@@ -1,63 +1,63 @@
 package service;
-
 import repository.DB;
-
 import java.util.*;
-
 public class HandlerDB {
 
     public List<int[]> getConversionRows(String measureFrom, String measureTo, DB db) {
         LinkedList<Integer> queue = new LinkedList<Integer>();
-        int ToRow = -1;
-        int FromRow = -1;
-        String startMsr = measureFrom;
-        String nextMsr = measureTo;
-        queue.addAll(db.getIndexesFilteredRows(measureFrom));
+        HashMap <Integer, String> stack = new HashMap<>();
+        //detect rows on first iterate
+        db.getIndexesFilteredRows(measureFrom).forEach(e -> {
+            queue.add(e);
+            stack.put(e, measureFrom);
+        });
+        String currentMsr = measureFrom;
         Pool pool = new Pool();
+        pool.linkedRows.add(new int[] {queue.getFirst().intValue(),queue.getFirst().intValue()});
         while (queue.size() != 0) {
-            addNextRowsToQueue(queue, db, startMsr, measureTo, pool);
-        }
-        return pool.linkedRows;
-    }
-
-    private void addNextRowsToQueue(LinkedList<Integer> queue, DB db, String msr, String measureTo, Pool pool) {
-        String currentMsr = msr;
-        while(!currentMsr.equals(measureTo)){
+            pool.tempChilds.clear();
             int currentIndex = queue.getFirst();
             if(Arrays.stream((db.getDataRules().get(currentIndex))).anyMatch(measureTo::equals)){
-                currentMsr = measureTo;
-
+                pool.linkedRows.add(new int[] {queue.getFirst().intValue(),queue.getFirst().intValue()});
+                queue.clear();
             }
             else{
-
                 queue.removeFirst();
-                currentIndex = queue.getFirst();
-                if(!Arrays.stream((db.getDataRules().get(currentIndex))).anyMatch(currentMsr::equals)){currentMsr = otherMsr;}
-                pool.childs = db.getIndexesFilteredRows(currentMsr);
-                pool.childs.removeIf(number -> number == currentIndex);
-                for (Integer nextIndex : pool.childs) {
+                System.out.println(Arrays.toString(db.getDataRules().get(currentIndex)));
+                String otherMeasure = db.getPair(stack.get(currentIndex),currentIndex);
+                pool.tempChilds.addAll(db.getIndexesFilteredRows(otherMeasure));
+                int finalCurrentIndex = currentIndex;
+                pool.tempChilds.removeIf(number -> number == finalCurrentIndex);
+                queue.addAll(pool.tempChilds);
+                System.out.println("дочерние строки");
+                for (Integer e : pool.tempChilds) {
+                    System.out.println(Arrays.toString(db.getDataRules().get(e.intValue())));
+                }
+                System.out.println("////////////////////////////");
+
+                for (Integer nextIndex : pool.tempChilds) {
                     int[] el = {nextIndex.intValue(), currentIndex};
                     pool.linkedRows.add(el);
+                    stack.put(nextIndex, otherMeasure);
                 }
-                queue.addAll(pool.childs);
-
-
             }
+
         }
+        for (int[] e : pool.linkedRows) {
+            System.out.println("Итерация № " + pool.linkedRows.indexOf(e));
+            System.out.println("строка " + e[0] + " "+ Arrays.toString(db.getDataRules().get(e[0])));
+            System.out.println("строка " + e[0] + " "+Arrays.toString(db.getDataRules().get(e[1])));
+        }
+        return pool.linkedRows;
+
+
     }
-
-    private ArrayList<Integer> getChildRowsIndexesByParentMeasure(int index, String parentMeasure, DB db){
-
-        return  db.getIndexesFilteredRows(parentMeasure).removeIf((number -> number == index);
-
-    }
-
-
     private class  Pool{
         List<int[]> linkedRows;
-        List<Integer> childs;
+        List<Integer> tempChilds;
         public Pool(){
             linkedRows = new LinkedList<int[]>();
+            tempChilds = new ArrayList<Integer>();
         }
 
 

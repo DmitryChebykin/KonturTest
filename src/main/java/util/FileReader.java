@@ -2,6 +2,7 @@ package util;
 
 import repository.DB;
 import service.HandlerDB;
+import service.PostService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,12 +44,13 @@ public class FileReader {
             dbObject.setTableTypeMeasures();
             dbObject.getIndexesFilteredRows("удав");
             HandlerDB handlerDb = new HandlerDB();
-            handlerDb.getConversionRows("км", "удав", dbObject);
-
-            //PostService calcResponsePostService = new PostService();
+            handlerDb.getConversionRows("foot", "сажень", dbObject);
 
 
-            //double res = calcResponsePostService.ReturnRatioOfTwoMeasure("миля","удав",records);
+            PostService postService = new PostService();
+
+
+            //double res = postService.ReturnRatioOfTwoMeasure("см","удав",records);
             //ArrayList<SortedSet> exprList = new ArrayList<SortedSet>();
             //exprList = calcResponsePostService.parse("   км * м *     сек* час /     миля * попугай *     удав * сажень");
             //exprList = calcResponsePostService.parse("   км * м *     сек* час /     км * м *     сек* час");
