@@ -1,6 +1,7 @@
 package util;
 
 import repository.DB;
+import service.HandlerDB;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,6 +42,8 @@ public class FileReader {
             dbObject.setGroupsMeasures();
             dbObject.setTableTypeMeasures();
             dbObject.getIndexesFilteredRows("удав");
+            HandlerDB handlerDb = new HandlerDB();
+            handlerDb.getConversionRows("км", "удав", dbObject);
 
             //PostService calcResponsePostService = new PostService();
 

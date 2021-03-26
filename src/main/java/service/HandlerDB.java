@@ -4,7 +4,7 @@ import repository.DB;
 
 import java.util.*;
 
-public class handlerDB {
+public class HandlerDB {
 
     public List<int[]> getConversionRows(String measureFrom, String measureTo, DB db) {
         LinkedList<Integer> queue = new LinkedList<Integer>();
@@ -15,13 +15,13 @@ public class handlerDB {
         queue.addAll(db.getIndexesFilteredRows(measureFrom));
         Pool pool = new Pool();
         while (queue.size() != 0) {
-            addNextRowsToQueue(queue, db, nextMsr, measureTo, pool);
+            addNextRowsToQueue(queue, db, startMsr, measureTo, pool);
         }
         return pool.linkedRows;
     }
 
-    private void addNextRowsToQueue(LinkedList<Integer> queue, DB db, String nextMsr, String measureTo, Pool pool) {
-        String currentMsr = nextMsr;
+    private void addNextRowsToQueue(LinkedList<Integer> queue, DB db, String msr, String measureTo, Pool pool) {
+        String currentMsr = msr;
         while(!currentMsr.equals(measureTo)){
             int currentIndex = queue.getFirst();
             if(Arrays.stream((db.getDataRules().get(currentIndex))).anyMatch(measureTo::equals)){
@@ -29,22 +29,37 @@ public class handlerDB {
 
             }
             else{
-                currentMsr = db.getPair(nextMsr, currentIndex);
+
                 queue.removeFirst();
+                currentIndex = queue.getFirst();
+                if(!Arrays.stream((db.getDataRules().get(currentIndex))).anyMatch(currentMsr::equals)){currentMsr = otherMsr;}
                 pool.childs = db.getIndexesFilteredRows(currentMsr);
                 pool.childs.removeIf(number -> number == currentIndex);
                 for (Integer nextIndex : pool.childs) {
-                    pool.linkedRows.add(new int[]{nextIndex, currentIndex});
+                    int[] el = {nextIndex.intValue(), currentIndex};
+                    pool.linkedRows.add(el);
                 }
                 queue.addAll(pool.childs);
+
 
             }
         }
     }
 
+    private ArrayList<Integer> getChildRowsIndexesByParentMeasure(int index, String parentMeasure, DB db){
+
+        return  db.getIndexesFilteredRows(parentMeasure).removeIf((number -> number == index);
+
+    }
+
+
     private class  Pool{
         List<int[]> linkedRows;
         List<Integer> childs;
+        public Pool(){
+            linkedRows = new LinkedList<int[]>();
+        }
+
 
     }
 }
