@@ -33,6 +33,22 @@ public class DB {
         return filteredList;
     }
 
+    public ArrayList<Integer> getIndexesFilteredRows(String measure){
+        ArrayList<Integer> rowsIndexes = new ArrayList<Integer>();
+        List<String[]> filteredList = new ArrayList<>();
+        for (String[] e : dataRules) {
+            if (e[0].equals(measure) || e[1].equals(measure)) {
+                filteredList.add(e);
+                rowsIndexes.add(dataRules.indexOf(e));
+            }
+        }
+
+        return rowsIndexes;
+
+
+    }
+
+
     private List getUniqueMeasures (List<String[]> list){
 
         SortedSet <String> temp = new TreeSet<String>();
@@ -76,7 +92,6 @@ public class DB {
             }
         }
 
-
     public void setTableTypeMeasures() {
         for (List list : groupsMeasures){
             for (int i = 0; i < list.size(); i++){
@@ -87,8 +102,9 @@ public class DB {
         }
     }
 
-    public LinkedList<String[]> getConversionRows (String measure1, String measure2){
-
+    public String getPair(String Msr, int RowIndex) {
+        if (dataRules.get(RowIndex)[0].equals(Msr)) return dataRules.get(RowIndex)[1];
+        else
+        return dataRules.get(RowIndex)[0];
     }
-
 }

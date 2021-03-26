@@ -40,6 +40,7 @@ public class FileReader {
             dbObject.setDataRules((ArrayList<String[]>) records);
             dbObject.setGroupsMeasures();
             dbObject.setTableTypeMeasures();
+            dbObject.getIndexesFilteredRows("удав");
 
             //CalcResponsePostService calcResponsePostService = new CalcResponsePostService();
 
