@@ -29,8 +29,8 @@ public class MyApplication {
             dbObject.makeUniqueMeasure();
             HandlerDB handlerDb = new HandlerDB();
             RequestDto requestDto = new RequestDto();
-            requestDto.setFrom(" км * час / м * сек");
-            requestDto.setTo("");
+            requestDto.setFrom("    км");
+            requestDto.setTo("м ");
             RespounceBuilder postService = new RespounceBuilder();
             HandlerDtoRequest handlerDto = new HandlerDtoRequest();
             postService.setDbObject(dbObject);

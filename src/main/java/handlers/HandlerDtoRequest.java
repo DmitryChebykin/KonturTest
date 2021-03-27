@@ -9,20 +9,32 @@ public class HandlerDtoRequest {
         ArrayList<String[]> num = new ArrayList();
         ArrayList<String[]> denom = new ArrayList();
         List exprList = new ArrayList<String[]>();
+        String[] numerator;
+        String[] denominator;
         //someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
         someString = stringMeasuresExpression;
+        String numeratorString = null;
+        String denominatorString;
         if(someString == null || someString.trim().isEmpty()){
-            exprList.add(null);
-            exprList.add(null);
+            exprList.add(new String[]{" "});
+            exprList.add(new String[]{" "});
             return (ArrayList<String[]>) exprList;
         }
-        String[] arrString = someString.split("/");
-        String numeratorString = arrString[0].replaceAll("\\s|\\*", " ");
-        String denominatorString = arrString[1].replaceAll("\\s|\\*", " ");
-        numeratorString = numeratorString.trim();
-        denominatorString = denominatorString.trim();
-        String[] numerator = numeratorString.split("[\\s]+");
-        String[] denominator = denominatorString.split("[\\s]+");
+        if(someString.contains("/")){
+            String[] arrString = someString.split("/");
+            numeratorString = arrString[0].replaceAll("\\s|\\*", " ");
+            denominatorString = arrString[1].replaceAll("\\s|\\*", " ");
+            numeratorString = numeratorString.trim();
+            denominatorString = denominatorString.trim();
+            numerator = numeratorString.split("[\\s]+");
+            denominator = denominatorString.split("[\\s]+");
+        }
+        else{numeratorString = someString.replaceAll("\\s|\\*", " ");
+            numeratorString = numeratorString.trim();
+            numerator = numeratorString.split("[\\s]+");
+            denominator = new String[]{" "};
+
+        }
 
         exprList.add(numerator);
         exprList.add(denominator);
@@ -31,39 +43,19 @@ public class HandlerDtoRequest {
     }
 
     public ArrayList<String[]> getFullFraction(ArrayList<String[]> fromParsed, ArrayList<String[]> toParsed) {
+
         ArrayList<String[]> fullFraction = new ArrayList<>();
 
-        ArrayList<String> numerator = null;
-        ArrayList<String> denomenator = null;
+        String[] numerator = Arrays.copyOf(fromParsed.get(0), fromParsed.get(0).length + toParsed.get(1).length);
+        System.arraycopy(toParsed.get(1), 0, numerator, fromParsed.get(0).length, toParsed.get(1).length);
+        numerator = Arrays.stream(numerator).filter(s -> !s.equals(" ")).toArray(String[]::new);
 
-        try{
-        numerator.addAll(Arrays.asList(fromParsed.get(0)));} catch (Exception e) {
-            e.printStackTrace();
-        }
-        try{
-            numerator.addAll(Arrays.asList(toParsed.get(1)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
+        String[] denomenator = Arrays.copyOf(fromParsed.get(1), fromParsed.get(1).length + toParsed.get(0).length);
+        System.arraycopy(toParsed.get(0), 0, denomenator, fromParsed.get(1).length, toParsed.get(0).length);
+        denomenator = Arrays.stream(denomenator).filter(s -> !s.equals(" ")).toArray(String[]::new);
 
-        }
-        try{
-        denomenator.addAll(Arrays.asList(fromParsed.get(1)));} catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            denomenator.addAll(Arrays.asList(toParsed.get(0)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {fullFraction.add(0, (String[]) numerator.toArray());
-            fullFraction.add(1, (String[]) denomenator.toArray());
-
-        }
-
-//        fullFraction.add(0, (String[]) numerator.toArray());
-//        fullFraction.add(1, (String[]) denomenator.toArray());
+        fullFraction.add(0, numerator);
+        fullFraction.add(1, denomenator);
         return fullFraction;
     }
 

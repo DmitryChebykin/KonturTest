@@ -46,11 +46,11 @@ public class HandlerDB {
             }
 
         }
-        for (int[] e : pool.linkedRows) {
-            System.out.println("Итерация № " + pool.linkedRows.indexOf(e));
-            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[0])));
-            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[1])));
-        }
+//        for (int[] e : pool.linkedRows) {
+//            System.out.println("Итерация № " + pool.linkedRows.indexOf(e));
+//            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[0])));
+//            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[1])));
+//        }
         return pool.linkedRows;
     }
 
@@ -66,7 +66,15 @@ public class HandlerDB {
         for (Integer e : temp) {
             element = db.getDataRules().get(e);
             ratioTemp = Double.parseDouble(element[2]);
-            if (temp.get(0).equals(temp.get(1))) break;
+            if (temp.get(0).equals(temp.get(1))) {
+                if (iterateMeasure.equals(element[0])) {
+                    iterateMeasure = element[1];
+                    ratio = ratio / ratioTemp;
+                } else {
+                    ratio = ratio * ratioTemp;
+                    iterateMeasure = element[0];
+                }
+                break;}
             if (iterateMeasure.equals(element[0])) {
                 iterateMeasure = element[1];
                 ratio = ratio / ratioTemp;
@@ -74,13 +82,13 @@ public class HandlerDB {
                 ratio = ratio * ratioTemp;
                 iterateMeasure = element[0];
             }
-            if (temp.get(0).equals(temp.get(1))) break;
+
             System.out.println(ratio);
         }
 
         //ratio = 1/ratio;
-        System.out.println("преобразование " + measureFrom + "   " + measureTo);
-        System.out.println("final ratio = " + ratio);
+//        System.out.println("преобразование " + measureFrom + "   " + measureTo);
+//        System.out.println("final ratio = " + ratio);
         return ratio;
     }
 
