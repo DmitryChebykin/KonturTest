@@ -1,5 +1,7 @@
 package handlers;
+
 import repository.DB;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,7 +40,7 @@ public class HandlerDB {
 
                 for (Integer nextIndex : pool.tempChilds) {
                     //new int[] el = {nextIndex.intValue(), currentIndex};
-                    pool.linkedRows.add(new int[] {nextIndex.intValue(), currentIndex});
+                    pool.linkedRows.add(new int[]{nextIndex.intValue(), currentIndex});
                     stack.put(nextIndex, otherMeasure);
                 }
             }
@@ -70,31 +72,32 @@ public class HandlerDB {
                 ratio = ratio * ratioTemp;
                 iterateMeasure = element[0];
             }
-            if(temp.get(0).equals(temp.get(1)))break;
+            if (temp.get(0).equals(temp.get(1))) break;
             System.out.println(ratio);
         }
 
         //ratio = 1/ratio;
-        System.out.println("преобразование " + measureFrom + "   "+measureTo);
+        System.out.println("преобразование " + measureFrom + "   " + measureTo);
         System.out.println("final ratio = " + ratio);
         return ratio;
     }
-    
+
     public ArrayList<Integer> normaliseLinkedRows(LinkedList<int[]> linkedRows) {
         int[] array;
         ArrayList<Integer> normalise = new ArrayList<Integer>();
         array = linkedRows.removeLast();
         normalise.add(array[0]);
         int tem1 = -2;
-        if(normalise.isEmpty()){return normalise;}
-        else{
+        if (normalise.isEmpty()) {
+            return normalise;
+        } else {
             int[] finalArray = array;
             List<int[]> nextElenent = linkedRows.stream().filter(e -> e[0] == finalArray[0]).collect(Collectors.toList());
-            while(!(tem1==0)){
+            while (!(tem1 == 0)) {
                 normalise.add(nextElenent.get(0)[1]);
                 int i = nextElenent.get(0)[1];
                 nextElenent = linkedRows.stream().filter(e -> e[0] == i).collect(Collectors.toList());
-                if(nextElenent.isEmpty())break;
+                if (nextElenent.isEmpty()) break;
                 tem1 = linkedRows.indexOf(nextElenent.get(0));
 
             }
@@ -102,17 +105,16 @@ public class HandlerDB {
         }
 
 
-
     }
 
     private class Pool {
-            List<int[]> linkedRows;
-            List<Integer> tempChilds;
+        List<int[]> linkedRows;
+        List<Integer> tempChilds;
 
-            public Pool() {
-                linkedRows = new LinkedList<int[]>();
-                tempChilds = new ArrayList<Integer>();
-            }
+        public Pool() {
+            linkedRows = new LinkedList<int[]>();
+            tempChilds = new ArrayList<Integer>();
         }
+    }
 
 }

@@ -7,6 +7,7 @@ public class DB {
 
     private ArrayList<String[]> dataRules;
     private ArrayList<LinkedList> groupsMeasures;
+    private HashSet<String> uniqueMeasure;
 
     public HashMap<String, Integer> getTableTypeMeasures() {
         return tableTypeMeasures;
@@ -83,7 +84,7 @@ public class DB {
         return uniqueMeasures;
     }
 
-    public void setGroupsMeasures(){
+    public void makeGroupsMeasures(){
         List temp = new LinkedList<String>();
         List <String> measures = getUniqueMeasures(dataRules);
         while(!measures.isEmpty()) {
@@ -94,7 +95,7 @@ public class DB {
             }
         }
 
-    public void setTableTypeMeasures() {
+    public void makeTableTypeMeasures() {
         for (List list : groupsMeasures){
             for (int i = 0; i < list.size(); i++){
                 Integer value = groupsMeasures.indexOf(list);
@@ -108,5 +109,11 @@ public class DB {
         if (dataRules.get(RowIndex)[0].equals(Msr)) return dataRules.get(RowIndex)[1];
         else
         return dataRules.get(RowIndex)[0];
+    }
+
+    public void makeUniqueMeasure(){
+
+        uniqueMeasure.addAll(getUniqueMeasures(dataRules));
+
     }
 }

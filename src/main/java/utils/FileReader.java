@@ -22,11 +22,10 @@ public class FileReader {
                 String[] line = new String[3];
                 while (dataScanner.hasNext()) {
                     String data = dataScanner.next();
-                    if (index < 3){
-                    line[index] = data;
+                    if (index < 3) {
+                        line[index] = data;
 
-                    }
-                    else
+                    } else
                         System.out.println("invalid data::" + data);
                     index++;
                 }

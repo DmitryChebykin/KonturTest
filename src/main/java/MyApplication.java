@@ -30,13 +30,14 @@ public class MyApplication {
             HandlerDB handlerDb = new HandlerDB();
             PostService postService = new PostService();
             HandlerDtoRequest handlerDto = new HandlerDtoRequest();
-            ArrayList<String[]> from = new ArrayList<String[]> (Arrays.asList(new String[]{"м", "сутки", "неделя", "удав"},new String[]{"миля", "аршин", "локоть", "час"}));
-            ArrayList<String[]> to = new ArrayList<String[]> (Arrays.asList(new String[]{"c", "год", "сажень", "удав"},new String[]{"foot", "км", "локоть", "час"}));
+            ArrayList<String[]> from = new ArrayList<String[]>(Arrays.asList(new String[]{"м", "сутки", "неделя", "удав"}, new String[]{"миля", "аршин", "локоть", "час"}));
+            ArrayList<String[]> to = new ArrayList<String[]>(Arrays.asList(new String[]{"c", "год", "сажень", "удав"}, new String[]{"foot", "км", "локоть", "час"}));
             handlerDto.getFullFraction(from, to);
 
             dbObject.setDataRules(records);
-            dbObject.setGroupsMeasures();
-            dbObject.setTableTypeMeasures();
+            dbObject.makeGroupsMeasures();
+            dbObject.makeTableTypeMeasures();
+            dbObject.makeUniqueMeasure();
 
             handlerDb.getConversionRows("foot", "сажень", dbObject);
             handlerDb.getRatio("foot", "сажень", dbObject);
@@ -51,6 +52,7 @@ public class MyApplication {
             handlerDb.getRatio("локоть", "мм", dbObject);
             handlerDb.getRatio("кабельтов", "мм", dbObject);
             handlerDb.getRatio("удав", "foot", dbObject);
+
 
 
         }

@@ -5,8 +5,6 @@ import repository.DB;
 import java.util.*;
 
 public class HandlerDtoRequest {
-
-
     public ArrayList<SortedSet> parse(String stringMeasuresExpression) {
         String someString;
         SortedSet<String> num = new TreeSet<String>();
@@ -29,26 +27,41 @@ public class HandlerDtoRequest {
         System.out.println();
         return (ArrayList<SortedSet>) exprList;
     }
-   public boolean checkMeasureInDatabase(String measure, DB db) {
-       return db.getTableTypeMeasures().containsValue(measure);
-   }
-   public ArrayList<String[]> getFullFraction (ArrayList<String[]> fromParsed, ArrayList<String[]> toParsed){
-       ArrayList<String[]> fullFraction = new ArrayList<String[]>();
 
-       String[] numerator = Arrays.copyOf(fromParsed.get(0), fromParsed.get(0).length + toParsed.get(1).length);
-       System.arraycopy(toParsed.get(1), 0, numerator, fromParsed.get(0).length, toParsed.get(1).length);
+    public boolean checkMeasureInDatabase(String measure, DB db) {
+        return db.getTableTypeMeasures().containsValue(measure);
+    }
 
-       String[] denomenator = Arrays.copyOf(fromParsed.get(1), fromParsed.get(1).length + toParsed.get(0).length);
-       System.arraycopy(toParsed.get(0), 0, denomenator, fromParsed.get(1).length, toParsed.get(0).length);
+    public ArrayList<String[]> getFullFraction(ArrayList<String[]> fromParsed, ArrayList<String[]> toParsed) {
+        ArrayList<String[]> fullFraction = new ArrayList<String[]>();
 
-       fullFraction.add(0, numerator);
-       fullFraction.add(1, denomenator);
-       return fullFraction;
-   }
+        String[] numerator = Arrays.copyOf(fromParsed.get(0), fromParsed.get(0).length + toParsed.get(1).length);
+        System.arraycopy(toParsed.get(1), 0, numerator, fromParsed.get(0).length, toParsed.get(1).length);
 
-   public boolean checkConversionEnable(ArrayList<String[]> fullFraction){
-        if(fullFraction.get(0).length == fullFraction.get(1).length) {return true;}
-        else{
-        return false;}
-   }
+        String[] denomenator = Arrays.copyOf(fromParsed.get(1), fromParsed.get(1).length + toParsed.get(0).length);
+        System.arraycopy(toParsed.get(0), 0, denomenator, fromParsed.get(1).length, toParsed.get(0).length);
+
+        fullFraction.add(0, numerator);
+        fullFraction.add(1, denomenator);
+        return fullFraction;
+    }
+
+    public boolean checkConversionEnable(ArrayList<String[]> fullFraction) {
+        if (fullFraction.get(0).length == fullFraction.get(1).length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean checkAllMeasureInDatabase(ArrayList<String[]> fullFraction, HashSet<String> uniqueMeasure){
+        HashSet<String> dtoUniqueMeasure = new HashSet();
+        for (String[]f: fullFraction){
+            Arrays.stream(f).forEach(num -> dtoUniqueMeasure.add(num));
+        }
+        return uniqueMeasure.containsAll(dtoUniqueMeasure);
+
+
+
+    }
 }
