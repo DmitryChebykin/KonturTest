@@ -1,7 +1,6 @@
 import controllers.HttpServer;
 import repository.DB;
 import handlers.HandlerDB;
-import services.PostService;
 import utils.FileReader;
 
 import java.io.FileNotFoundException;
