@@ -12,7 +12,7 @@ public class HandlerDtoRequest {
         SortedSet<String> num = new TreeSet<String>();
         SortedSet<String> denom = new TreeSet<String>();
         List exprList = new ArrayList<String[]>();
-        someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
+        //someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
         someString = stringMeasuresExpression;
         String[] arrString = someString.split("/");
         String numeratorString = arrString[0].replaceAll("\\s|\\*", " ");
@@ -44,5 +44,11 @@ public class HandlerDtoRequest {
        fullFraction.add(0, numerator);
        fullFraction.add(1, denomenator);
        return fullFraction;
+   }
+
+   public boolean checkConversionEnable(ArrayList<String[]> fullFraction){
+        if(fullFraction.get(0).length == fullFraction.get(1).length) {return true;}
+        else{
+        return false;}
    }
 }
