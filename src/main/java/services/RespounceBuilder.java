@@ -3,6 +3,7 @@ package services;
 
 import dto.RequestDto;
 import dto.RespounceDto;
+import handlers.HandlerDB;
 import handlers.HandlerDtoRequest;
 import repository.DB;
 
@@ -34,6 +35,12 @@ public class RespounceBuilder {
 
     HandlerDtoRequest handlerDtoRequest;
 
+    public void setHandlerDB(HandlerDB handlerDB) {
+        this.handlerDB = handlerDB;
+    }
+
+    HandlerDB handlerDB;
+
 
     private boolean isBlankString(String string) {
         return string == null || string.trim().isEmpty();
@@ -41,25 +48,31 @@ public class RespounceBuilder {
 
     public double fullRatio(ArrayList<String[]> fullFraction) {
 
+        double k = 1f;
+
         LinkedList<String> numerator = new LinkedList();
         LinkedList<String> denominator = new LinkedList();
 
         numerator.addAll(Arrays.asList(fullFraction.get(0)));
         denominator.addAll(Arrays.asList(fullFraction.get(1)));
 
-
-
-        while(!numerator.isEmpty()){
+        while (!numerator.isEmpty()) {
             String num = numerator.getFirst();
             Integer typeNum = dbObject.getTableTypeMeasures().get(num);
-            denominator.for
+            for (String denum : denominator) {
+                Integer typeDenum = dbObject.getTableTypeMeasures().get(denum);
+                if ((int) typeNum == (int) typeDenum) {
+                    k = k * handlerDB.getRatio(num, denum, dbObject);
+                    numerator.removeFirst();
+                    denominator.remove(denum);
+
+                }
+                break;
+
+            }
 
         }
-        
-        
-        
-
-        return 0f;
+        return k;
     }
 
     public void run() {
@@ -71,9 +84,10 @@ public class RespounceBuilder {
 
         boolean bothFieldEmpty = isBlankString(inputDto.getFrom()) && isBlankString(inputDto.getTo());
         boolean bothFieldKnownMeasure = handlerDtoRequest.checkConversionEnable(fullFraction, dbObject.getUniqueMeasure());
+        boolean bothFieldEqualLength = handlerDtoRequest.checkConversionEnable(fullFraction);
         boolean bothFieldCountNotEqual = !handlerDtoRequest.checkConversionEnable(fullFraction, dbObject.getTableTypeMeasures());
 
-        if (bothFieldEmpty || (bothFieldKnownMeasure && bothFieldCountNotEqual)) {
+        if (bothFieldEmpty || (bothFieldEqualLength && bothFieldCountNotEqual)) {
             outputDto.setStatusCode("404");
             outputDto.setBody("невозможно осуществить такое преобразование");
 

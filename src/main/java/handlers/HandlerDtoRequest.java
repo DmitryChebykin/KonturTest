@@ -5,8 +5,8 @@ public class HandlerDtoRequest {
 
     public ArrayList<String[]> parse(String stringMeasuresExpression) {
         String someString;
-        SortedSet<String> num = new TreeSet();
-        SortedSet<String> denom = new TreeSet();
+        ArrayList<String[]> num = new ArrayList();
+        ArrayList<String[]> denom = new ArrayList();
         List exprList = new ArrayList<String[]>();
         //someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
         someString = stringMeasuresExpression;
@@ -17,23 +17,21 @@ public class HandlerDtoRequest {
         denominatorString = denominatorString.trim();
         String[] numerator = numeratorString.split("[\\s]+");
         String[] denominator = denominatorString.split("[\\s]+");
-        num.addAll(Arrays.asList(numerator));
-        denom.addAll(Arrays.asList(denominator));
-        System.out.println();
+        num.add(numerator);
+        denom.add(denominator);
         exprList.add(num);
         exprList.add(denom);
-        System.out.println();
         return (ArrayList<String[]>) exprList;
     }
 
     public ArrayList<String[]> getFullFraction(ArrayList<String[]> fromParsed, ArrayList<String[]> toParsed) {
         ArrayList<String[]> fullFraction = new ArrayList<>();
 
-        String[] numerator = Arrays.copyOf(fromParsed.get(0), fromParsed.get(0).length + toParsed.get(1).length);
-        System.arraycopy(toParsed.get(1), 0, numerator, fromParsed.get(0).length, toParsed.get(1).length);
 
-        String[] denomenator = Arrays.copyOf(fromParsed.get(1), fromParsed.get(1).length + toParsed.get(0).length);
-        System.arraycopy(toParsed.get(0), 0, denomenator, fromParsed.get(1).length, toParsed.get(0).length);
+        String[] numerator = new String[0];
+
+        String[] denomenator = new String[0];
+
 
         fullFraction.add(0, numerator);
         fullFraction.add(1, denomenator);
@@ -72,8 +70,5 @@ public class HandlerDtoRequest {
 
     }
 
-
-
-
-    }
 }
+
