@@ -2,7 +2,7 @@ import controllers.HttpServer;
 import handlers.HandlerDtoRequest;
 import repository.DB;
 import handlers.HandlerDB;
-import services.PostService;
+import services.RespounceBuilder;
 import utils.FileReader;
 
 import java.io.FileNotFoundException;
@@ -16,37 +16,35 @@ public class MyApplication {
 
 
         FileReader fmr = new FileReader();
-        ArrayList<String[]> records = null;
+
         try {
             fmr.ReadCSVbyScanner("/file.csv");
-            records = fmr.records;
-
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
             new HttpServer().StartUp();
             DB dbObject = new DB();
             HandlerDB handlerDb = new HandlerDB();
-            PostService postService = new PostService();
+            RespounceBuilder postService = new RespounceBuilder();
             HandlerDtoRequest handlerDto = new HandlerDtoRequest();
             ArrayList<String[]> from = new ArrayList<String[]>(Arrays.asList(new String[]{"м", "сутки", "неделя", "удав"}, new String[]{"миля", "аршин", "локоть", "час"}));
-            ArrayList<String[]> to = new ArrayList<String[]>(Arrays.asList(new String[]{"парсек", "год", "сажень", "удав"}, new String[]{"foot", "км", "локоть", "час"}));
+//            ArrayList<String[]> to = new ArrayList<String[]>(Arrays.asList(new String[]{"парсек", "год", "сажень", "удав"}, new String[]{"foot", "км", "локоть", "час"}));
+            ArrayList<String[]> to = new ArrayList<String[]>(Arrays.asList(new String[]{}, new String[]{}));
             ArrayList<String[]> fraction =  new ArrayList<>();
             fraction = handlerDto.getFullFraction(from, to);
 
 
 
-            dbObject.setDataRules(records);
+            dbObject.setDataRules(fmr.records);
             dbObject.makeGroupsMeasures();
             dbObject.makeTableTypeMeasures();
             dbObject.makeUniqueMeasure();
             dbObject.getUniqueMeasure();
 
-            handlerDto.checkDtoMeasureInDatabase(fraction, dbObject.getUniqueMeasure());
+            handlerDto.checkConversionEnable(fraction, dbObject.getUniqueMeasure());
 
             handlerDb.getConversionRows("foot", "сажень", dbObject);
-            handlerDb.getRatio("foot", "сажень", dbObject);
+            handlerDb.getRatio("foot", "см", dbObject);
             handlerDb.getRatio("foot", "см", dbObject);
             handlerDb.getRatio("foot", "мм", dbObject);
             handlerDb.getRatio("foot", "км", dbObject);

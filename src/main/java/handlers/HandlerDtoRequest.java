@@ -1,14 +1,12 @@
 package handlers;
-
-import repository.DB;
-
 import java.util.*;
 
 public class HandlerDtoRequest {
-    public ArrayList<SortedSet> parse(String stringMeasuresExpression) {
+
+    public ArrayList<String[]> parse(String stringMeasuresExpression) {
         String someString;
-        SortedSet<String> num = new TreeSet<String>();
-        SortedSet<String> denom = new TreeSet<String>();
+        SortedSet<String> num = new TreeSet();
+        SortedSet<String> denom = new TreeSet();
         List exprList = new ArrayList<String[]>();
         //someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
         someString = stringMeasuresExpression;
@@ -25,15 +23,11 @@ public class HandlerDtoRequest {
         exprList.add(num);
         exprList.add(denom);
         System.out.println();
-        return (ArrayList<SortedSet>) exprList;
-    }
-
-    public boolean checkMeasureInDatabase(String measure, DB db) {
-        return db.getTableTypeMeasures().containsValue(measure);
+        return (ArrayList<String[]>) exprList;
     }
 
     public ArrayList<String[]> getFullFraction(ArrayList<String[]> fromParsed, ArrayList<String[]> toParsed) {
-        ArrayList<String[]> fullFraction = new ArrayList<String[]>();
+        ArrayList<String[]> fullFraction = new ArrayList<>();
 
         String[] numerator = Arrays.copyOf(fromParsed.get(0), fromParsed.get(0).length + toParsed.get(1).length);
         System.arraycopy(toParsed.get(1), 0, numerator, fromParsed.get(0).length, toParsed.get(1).length);
@@ -54,13 +48,32 @@ public class HandlerDtoRequest {
         }
     }
 
-    public boolean checkDtoMeasureInDatabase(ArrayList<String[]> fullFraction, HashSet<String> uniqueMeasure){
+    public boolean checkConversionEnable(ArrayList<String[]> fullFraction, HashMap<String, Integer> tableTypeMeasures){
+
+        TreeSet from = new TreeSet<String>();
+        TreeSet to = new TreeSet<String>();
+
+
+        String [] numerator = fullFraction.get(0);
+        String [] denominator = fullFraction.get(1);
+        Arrays.stream(numerator).forEach(e -> from.add(tableTypeMeasures.get(e)));
+        Arrays.stream(denominator).forEach(e -> to.add(tableTypeMeasures.get(e)));
+        return Objects.deepEquals(from, to);
+    }
+
+    public boolean checkConversionEnable(ArrayList<String[]> fullFraction, HashSet<String> uniqueMeasure){
         HashSet<String> dtoUniqueMeasure = new HashSet();
         for (String[]f: fullFraction){
             Arrays.stream(f).forEach(num -> dtoUniqueMeasure.add(num));
+
         }
         boolean res = uniqueMeasure.containsAll(dtoUniqueMeasure);
         return uniqueMeasure.containsAll(dtoUniqueMeasure);
+
+    }
+
+
+
 
     }
 }

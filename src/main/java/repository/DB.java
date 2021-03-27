@@ -1,5 +1,4 @@
 package repository;
-import com.sun.deploy.util.JVMParameters;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -96,7 +95,7 @@ public class DB {
     }
 
     public void makeGroupsMeasures(){
-        List temp = new LinkedList<String>();
+        List temp;
         List <String> measures = getUniqueMeasures(dataRules);
         while(!measures.isEmpty()) {
             String e = measures.get(0);
