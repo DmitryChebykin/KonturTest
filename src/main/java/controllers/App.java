@@ -1,8 +1,8 @@
-package controller;
+package controllers;
 
 import dto.RequestDto;
 
-public class AppController {
+public class App {
 
     public String[] convert(RequestDto body) {
         return null;

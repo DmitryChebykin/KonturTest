@@ -1,14 +1,8 @@
-package service;
+package handlers;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-
-public class PostService {
-
-    String[] DTOHandlerResult;
-
-
+public class HandlerDtoRequest {
 
 
     public ArrayList<SortedSet> parse(String stringMeasuresExpression) {
@@ -16,7 +10,7 @@ public class PostService {
         SortedSet<String> num = new TreeSet<String>();
         SortedSet<String> denom = new TreeSet<String>();
         List exprList = new ArrayList<String[]>();
-        //someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
+        someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
         someString = stringMeasuresExpression;
         String[] arrString = someString.split("/");
         String numeratorString = arrString[0].replaceAll("\\s|\\*", " ");
@@ -33,8 +27,4 @@ public class PostService {
         System.out.println();
         return (ArrayList<SortedSet>) exprList;
     }
-
-
-
-
 }

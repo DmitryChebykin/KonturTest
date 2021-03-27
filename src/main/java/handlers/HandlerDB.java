@@ -1,9 +1,10 @@
-package handler;
+package handlers;
 import repository.DB;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class HandlerDB {
+
     public List<int[]> getConversionRows(String measureFrom, String measureTo, DB db) {
         LinkedList<Integer> queue = new LinkedList<Integer>();
         HashMap<Integer, String> stack = new HashMap<>();
@@ -103,7 +104,8 @@ public class HandlerDB {
 
 
     }
-        private class Pool {
+
+    private class Pool {
             List<int[]> linkedRows;
             List<Integer> tempChilds;
 

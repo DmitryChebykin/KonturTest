@@ -1,14 +1,14 @@
-import controller.HttpPostService;
+import controllers.HttpServer;
 import repository.DB;
-import handler.HandlerDB;
-import service.PostService;
-import util.FileReader;
+import handlers.HandlerDB;
+import services.PostService;
+import utils.FileReader;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 
-public class Application {
+public class MyApplication {
 
     public void Run(String path) {
 
@@ -23,14 +23,15 @@ public class Application {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            new HttpPostService().StartUp();
+            new HttpServer().StartUp();
             DB dbObject = new DB();
             HandlerDB handlerDb = new HandlerDB();
+//          PostService postService = new PostService();
             dbObject.setDataRules(records);
             dbObject.setGroupsMeasures();
             dbObject.setTableTypeMeasures();
 
-              handlerDb.getConversionRows("foot", "сажень", dbObject);
+            handlerDb.getConversionRows("foot", "сажень", dbObject);
             handlerDb.getRatio("foot", "сажень", dbObject);
             handlerDb.getRatio("foot", "см", dbObject);
             handlerDb.getRatio("foot", "мм", dbObject);
@@ -43,7 +44,7 @@ public class Application {
             handlerDb.getRatio("локоть", "мм", dbObject);
             handlerDb.getRatio("кабельтов", "мм", dbObject);
             handlerDb.getRatio("удав", "foot", dbObject);
-            PostService postService = new PostService();
+
         }
 
 

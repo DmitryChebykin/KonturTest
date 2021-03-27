@@ -1,22 +1,22 @@
-package handler;
+package handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import controller.AppController;
+import controllers.App;
 import dto.RequestDto;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class AppHttpHandler implements HttpHandler {
+public class HandlerHttpServer implements HttpHandler {
 
     private ObjectMapper objectMapper;
-    private AppController controller;
+    private App controller;
 
-    public AppHttpHandler() {
+    public HandlerHttpServer() {
         objectMapper = new ObjectMapper();
-        controller = new AppController();
+        controller = new App();
     }
 
     @Override
