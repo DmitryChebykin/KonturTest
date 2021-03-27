@@ -46,11 +46,11 @@ public class HandlerDB {
             }
 
         }
-//        for (int[] e : pool.linkedRows) {
-//            System.out.println("Итерация № " + pool.linkedRows.indexOf(e));
-//            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[0])));
-//            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[1])));
-//        }
+        for (int[] e : pool.linkedRows) {
+            System.out.println("Итерация № " + pool.linkedRows.indexOf(e));
+            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[0])));
+            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[1])));
+        }
         return pool.linkedRows;
     }
 
@@ -62,9 +62,11 @@ public class HandlerDB {
         iterateMeasure = measureTo;
         LinkedList<int[]> conversionSteps = (LinkedList<int[]>) getConversionRows(measureFrom, measureTo, db);
         ArrayList<Integer> temp = normaliseLinkedRows(conversionSteps);
+        if(temp.size() == 1) temp.add(temp.get(0));
         for (Integer e : temp) {
             element = db.getDataRules().get(e);
             ratioTemp = Double.parseDouble(element[2]);
+            if (temp.get(0).equals(temp.get(1))) break;
             if (iterateMeasure.equals(element[0])) {
                 iterateMeasure = element[1];
                 ratio = ratio / ratioTemp;
@@ -86,6 +88,7 @@ public class HandlerDB {
         int[] array;
         ArrayList<Integer> normalise = new ArrayList<Integer>();
         array = linkedRows.removeLast();
+
         normalise.add(array[0]);
         int tem1 = -2;
         if (normalise.isEmpty()) {
@@ -93,7 +96,7 @@ public class HandlerDB {
         } else {
             int[] finalArray = array;
             List<int[]> nextElenent = linkedRows.stream().filter(e -> e[0] == finalArray[0]).collect(Collectors.toList());
-            while (!(tem1 == 0)) {
+            while (!(tem1 == 0) && nextElenent.size() > 0 ) {
                 normalise.add(nextElenent.get(0)[1]);
                 int i = nextElenent.get(0)[1];
                 nextElenent = linkedRows.stream().filter(e -> e[0] == i).collect(Collectors.toList());
@@ -101,6 +104,7 @@ public class HandlerDB {
                 tem1 = linkedRows.indexOf(nextElenent.get(0));
 
             }
+
             return normalise;
         }
 

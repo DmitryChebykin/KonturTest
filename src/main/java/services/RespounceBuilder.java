@@ -56,26 +56,37 @@ public class RespounceBuilder {
         numerator.addAll(Arrays.asList(fullFraction.get(0)));
         denominator.addAll(Arrays.asList(fullFraction.get(1)));
 
+        String denumElem;
+
         while (!numerator.isEmpty()) {
             String num = numerator.getFirst();
             Integer typeNum = dbObject.getTableTypeMeasures().get(num);
+            iLoop:
             for (String denum : denominator) {
+                denumElem = denum;
                 Integer typeDenum = dbObject.getTableTypeMeasures().get(denum);
                 if ((int) typeNum == (int) typeDenum) {
                     k = k * handlerDB.getRatio(num, denum, dbObject);
+                    denominator.remove(denumElem);
                     numerator.removeFirst();
-                    denominator.remove(denum);
+                    break iLoop;
 
                 }
-                break;
+
+
+
+
 
             }
 
         }
+        System.out.println("получилось  к = " + k );
         return k;
     }
 
     public void run() {
+
+        outputDto = new RespounceDto();
 
         ArrayList<String[]> fullFraction = null;
         ArrayList<String[]> fromParsered = handlerDtoRequest.parse(inputDto.getFrom());
