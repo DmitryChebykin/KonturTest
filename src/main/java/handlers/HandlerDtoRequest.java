@@ -33,15 +33,16 @@ public class HandlerDtoRequest {
        return db.getTableTypeMeasures().containsValue(measure);
    }
    public ArrayList<String[]> getFullFraction (ArrayList<String[]> fromParsed, ArrayList<String[]> toParsed){
-       ArrayList<String[]> fullFraction = new ArrayList<String[]>;
+       ArrayList<String[]> fullFraction = new ArrayList<String[]>();
 
        String[] numerator = Arrays.copyOf(fromParsed.get(0), fromParsed.get(0).length + toParsed.get(1).length);
-       System.arraycopy(fromParsed.get(0), 0, numerator, fromParsed.get(0).length, toParsed.get(1).length);
+       System.arraycopy(toParsed.get(1), 0, numerator, fromParsed.get(0).length, toParsed.get(1).length);
 
        String[] denomenator = Arrays.copyOf(fromParsed.get(1), fromParsed.get(1).length + toParsed.get(0).length);
-       System.arraycopy(fromParsed.get(1), 0, numerator, fromParsed.get(1).length, toParsed.get(0).length);
+       System.arraycopy(toParsed.get(0), 0, denomenator, fromParsed.get(1).length, toParsed.get(0).length);
 
-       fullFraction.set(0, numerator);
-       fullFraction.set(1, denomenator);
+       fullFraction.add(0, numerator);
+       fullFraction.add(1, denomenator);
+       return fullFraction;
    }
 }

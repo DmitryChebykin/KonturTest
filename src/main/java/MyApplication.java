@@ -1,10 +1,13 @@
 import controllers.HttpServer;
+import handlers.HandlerDtoRequest;
 import repository.DB;
 import handlers.HandlerDB;
+import services.PostService;
 import utils.FileReader;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MyApplication {
@@ -25,7 +28,12 @@ public class MyApplication {
             new HttpServer().StartUp();
             DB dbObject = new DB();
             HandlerDB handlerDb = new HandlerDB();
-//          PostService postService = new PostService();
+            PostService postService = new PostService();
+            HandlerDtoRequest handlerDto = new HandlerDtoRequest();
+            ArrayList<String[]> from = new ArrayList<String[]> (Arrays.asList(new String[]{"м", "сутки", "неделя", "удав"},new String[]{"миля", "аршин", "локоть", "час"}));
+            ArrayList<String[]> to = new ArrayList<String[]> (Arrays.asList(new String[]{"c", "год", "сажень", "удав"},new String[]{"foot", "км", "локоть", "час"}));
+            handlerDto.getFullFraction(from, to);
+
             dbObject.setDataRules(records);
             dbObject.setGroupsMeasures();
             dbObject.setTableTypeMeasures();
@@ -43,6 +51,7 @@ public class MyApplication {
             handlerDb.getRatio("локоть", "мм", dbObject);
             handlerDb.getRatio("кабельтов", "мм", dbObject);
             handlerDb.getRatio("удав", "foot", dbObject);
+
 
         }
 
