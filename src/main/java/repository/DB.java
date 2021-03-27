@@ -7,6 +7,11 @@ public class DB {
 
     private ArrayList<String[]> dataRules;
     private ArrayList<LinkedList> groupsMeasures;
+
+    public HashMap<String, Integer> getTableTypeMeasures() {
+        return tableTypeMeasures;
+    }
+
     private HashMap<String, Integer> tableTypeMeasures;
 
     public DB() {

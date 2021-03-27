@@ -1,5 +1,7 @@
 package handlers;
 
+import repository.DB;
+
 import java.util.*;
 
 public class HandlerDtoRequest {
@@ -27,5 +29,19 @@ public class HandlerDtoRequest {
         System.out.println();
         return (ArrayList<SortedSet>) exprList;
     }
+   public boolean checkMeasureInDatabase(String measure, DB db) {
+       return db.getTableTypeMeasures().containsValue(measure);
+   }
+   public ArrayList<String[]> getFullFraction (ArrayList<String[]> fromParsed, ArrayList<String[]> toParsed){
+       ArrayList<String[]> fullFraction = new ArrayList<String[]>;
 
+       String[] numerator = Arrays.copyOf(fromParsed.get(0), fromParsed.get(0).length + toParsed.get(1).length);
+       System.arraycopy(fromParsed.get(0), 0, numerator, fromParsed.get(0).length, toParsed.get(1).length);
+
+       String[] denomenator = Arrays.copyOf(fromParsed.get(1), fromParsed.get(1).length + toParsed.get(0).length);
+       System.arraycopy(fromParsed.get(1), 0, numerator, fromParsed.get(1).length, toParsed.get(0).length);
+
+       fullFraction.set(0, numerator);
+       fullFraction.set(1, denomenator);
+   }
 }
