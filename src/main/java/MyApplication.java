@@ -31,13 +31,19 @@ public class MyApplication {
             PostService postService = new PostService();
             HandlerDtoRequest handlerDto = new HandlerDtoRequest();
             ArrayList<String[]> from = new ArrayList<String[]>(Arrays.asList(new String[]{"м", "сутки", "неделя", "удав"}, new String[]{"миля", "аршин", "локоть", "час"}));
-            ArrayList<String[]> to = new ArrayList<String[]>(Arrays.asList(new String[]{"c", "год", "сажень", "удав"}, new String[]{"foot", "км", "локоть", "час"}));
-            handlerDto.getFullFraction(from, to);
+            ArrayList<String[]> to = new ArrayList<String[]>(Arrays.asList(new String[]{"парсек", "год", "сажень", "удав"}, new String[]{"foot", "км", "локоть", "час"}));
+            ArrayList<String[]> fraction =  new ArrayList<>();
+            fraction = handlerDto.getFullFraction(from, to);
+
+
 
             dbObject.setDataRules(records);
             dbObject.makeGroupsMeasures();
             dbObject.makeTableTypeMeasures();
             dbObject.makeUniqueMeasure();
+            dbObject.getUniqueMeasure();
+
+            handlerDto.checkDtoMeasureInDatabase(fraction, dbObject.getUniqueMeasure());
 
             handlerDb.getConversionRows("foot", "сажень", dbObject);
             handlerDb.getRatio("foot", "сажень", dbObject);

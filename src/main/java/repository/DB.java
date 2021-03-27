@@ -1,4 +1,6 @@
 package repository;
+import com.sun.deploy.util.JVMParameters;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -7,6 +9,15 @@ public class DB {
 
     private ArrayList<String[]> dataRules;
     private ArrayList<LinkedList> groupsMeasures;
+
+    public HashSet<String> getUniqueMeasure() {
+        return uniqueMeasure;
+    }
+
+    public void setUniqueMeasure(HashSet<String> uniqueMeasure) {
+        this.uniqueMeasure = uniqueMeasure;
+    }
+
     private HashSet<String> uniqueMeasure;
 
     public HashMap<String, Integer> getTableTypeMeasures() {
@@ -113,7 +124,10 @@ public class DB {
 
     public void makeUniqueMeasure(){
 
-        uniqueMeasure.addAll(getUniqueMeasures(dataRules));
+
+        HashSet<String> tempSet = new HashSet<>();
+        tempSet.addAll(getUniqueMeasures(dataRules));
+        setUniqueMeasure(tempSet);
 
     }
 }

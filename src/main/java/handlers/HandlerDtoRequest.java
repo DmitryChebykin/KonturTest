@@ -54,14 +54,13 @@ public class HandlerDtoRequest {
         }
     }
 
-    public boolean checkAllMeasureInDatabase(ArrayList<String[]> fullFraction, HashSet<String> uniqueMeasure){
+    public boolean checkDtoMeasureInDatabase(ArrayList<String[]> fullFraction, HashSet<String> uniqueMeasure){
         HashSet<String> dtoUniqueMeasure = new HashSet();
         for (String[]f: fullFraction){
             Arrays.stream(f).forEach(num -> dtoUniqueMeasure.add(num));
         }
+        boolean res = uniqueMeasure.containsAll(dtoUniqueMeasure);
         return uniqueMeasure.containsAll(dtoUniqueMeasure);
-
-
 
     }
 }
