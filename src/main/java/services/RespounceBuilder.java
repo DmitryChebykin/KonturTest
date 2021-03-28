@@ -99,7 +99,7 @@ public class RespounceBuilder {
         boolean bothFieldEqualLength = handlerDtoRequest.checkConversionEnable(fullFraction);
         boolean bothFieldCountNotEqual = !handlerDtoRequest.checkConversionEnable(fullFraction, dbObject.getTableTypeMeasures());
 
-        if (bothFieldEmpty || (!bothFieldEqualLength && bothFieldKnownMeasure)) {
+        if (bothFieldEmpty || ((!bothFieldEqualLength || bothFieldCountNotEqual) && bothFieldKnownMeasure)) {
             outputDto.setStatusCode("404");
             outputDto.setBody("невозможно осуществить такое преобразование");
 
