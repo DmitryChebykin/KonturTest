@@ -17,7 +17,7 @@ public class FileReader {
             Scanner scanner = new Scanner(new File(FileMeasurePath));
             while (scanner.hasNextLine()) {
                 Scanner dataScanner = new Scanner(scanner.nextLine());
-                dataScanner.useDelimiter(",");
+                dataScanner.useDelimiter("[\\s,]+");
                 int index = 0;
                 String[] line = new String[3];
                 while (dataScanner.hasNext()) {
