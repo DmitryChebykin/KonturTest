@@ -1,13 +1,13 @@
 package repository;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 
 public class DB {
 
     private ArrayList<String[]> dataRules;
+
     private ArrayList<LinkedList> groupsMeasures;
 
     public HashSet<String> getUniqueMeasure() {

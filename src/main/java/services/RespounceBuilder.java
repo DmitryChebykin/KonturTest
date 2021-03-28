@@ -1,17 +1,17 @@
 package services;
-
-
+//region Description imports
 import dto.RequestDto;
 import dto.RespounceDto;
 import handlers.HandlerDB;
 import handlers.HandlerDtoRequest;
 import repository.DB;
-
 import java.math.BigDecimal;
 import java.util.*;
+//endregion
 
 public class RespounceBuilder {
 
+    //region Description: Setters and Getters
     public void setDbObject(DB dbObject) {
         this.dbObject = dbObject;
     }
@@ -41,7 +41,7 @@ public class RespounceBuilder {
     }
 
     HandlerDB handlerDB;
-
+    //endregion
 
     private boolean isBlankString(String string) {
         return string == null || string.trim().isEmpty();
@@ -94,10 +94,9 @@ public class RespounceBuilder {
         ArrayList<String[]> fromParsered = handlerDtoRequest.parse(inputDto.getFrom());
         ArrayList<String[]> toParsered = handlerDtoRequest.parse(inputDto.getTo());
 
-        boolean bothFieldEmpty = isBlankString(inputDto.getFrom()) && isBlankString(inputDto.getTo());
-
         fullFraction = handlerDtoRequest.getFullFraction(fromParsered, toParsered);
 
+        boolean bothFieldEmpty = isBlankString(inputDto.getFrom()) && isBlankString(inputDto.getTo());
         boolean bothFieldKnownMeasure = handlerDtoRequest.checkConversionEnable(fullFraction, dbObject.getUniqueMeasure());
         boolean bothFieldEqualLength = handlerDtoRequest.checkConversionEnable(fullFraction);
         boolean bothFieldCountNotEqual = !handlerDtoRequest.checkConversionEnable(fullFraction, dbObject.getTableTypeMeasures());
