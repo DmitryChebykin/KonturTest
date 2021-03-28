@@ -1,13 +1,12 @@
 package handlers;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import controllers.App;
 import dto.RequestDto;
 import dto.RespounceDto;
-
+import repository.DB;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,9 +15,11 @@ import java.io.OutputStream;
 public class HandlerHttpServer implements HttpHandler {
 
     private static ObjectMapper objectMapper;
+    private final DB dbObject;
     private App controller;
 
-    public HandlerHttpServer() {
+    public HandlerHttpServer(DB dbObject) {
+        this.dbObject = dbObject;
         objectMapper = new ObjectMapper();
         controller = new App();
     }
@@ -30,7 +31,7 @@ public class HandlerHttpServer implements HttpHandler {
                 InputStream is = exchange.getRequestBody();
                 RequestDto body = new RequestDto();
                 body = objectMapper.readValue(exchange.getRequestBody(), RequestDto.class);
-                RespounceDto respounceDto = controller.convert(body);
+                RespounceDto respounceDto = controller.convert(body, dbObject);
                 byte [] res = respounceDto.getBody().getBytes();
                 exchange.sendResponseHeaders(Integer.parseInt(respounceDto.getStatusCode()), res.length);
                 OutputStream os = exchange.getResponseBody();

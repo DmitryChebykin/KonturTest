@@ -72,7 +72,6 @@ public class HandlerDtoRequest {
         ArrayList<String> from = new ArrayList<>();
         ArrayList<String> to = new ArrayList<>();
 
-
         String [] numerator = fullFraction.get(0);
         String [] denominator = fullFraction.get(1);
         ArrayList<String> finalFrom = from;
@@ -93,8 +92,6 @@ public class HandlerDtoRequest {
         }
         boolean res = uniqueMeasure.containsAll(dtoUniqueMeasure);
         return uniqueMeasure.containsAll(dtoUniqueMeasure);
-
     }
-
 }
 

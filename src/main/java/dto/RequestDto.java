@@ -1,5 +1,4 @@
 package dto;
-
 public class RequestDto {
 
     public RequestDto() {
