@@ -81,7 +81,6 @@ public class RespounceBuilder {
             }
 
         }
-        System.out.println("получилось  к = " + k );
         return k;
     }
 
@@ -108,7 +107,7 @@ public class RespounceBuilder {
             outputDto.setBody("используются неизвестные единицы измерения");
         } else {
             outputDto.setStatusCode("200");
-            outputDto.setBody(fullRatio(fullFraction).toPlainString());
+            outputDto.setBody(fullRatio(fullFraction).setScale(15, BigDecimal.ROUND_HALF_UP).toPlainString());
 
         }
 

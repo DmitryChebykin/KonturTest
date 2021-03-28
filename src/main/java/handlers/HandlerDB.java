@@ -28,18 +28,16 @@ public class HandlerDB {
                 queue.clear();
             } else {
                 queue.removeFirst();
-                //System.out.println(Arrays.toString(db.getDataRules().get(currentIndex)));
+
                 String otherMeasure = db.getPair(stack.get(currentIndex), currentIndex);
                 pool.tempChilds.addAll(db.getIndexesFilteredRows(otherMeasure));
                 int finalCurrentIndex = currentIndex;
                 pool.tempChilds.removeIf(number -> number == finalCurrentIndex);
                 queue.addAll(pool.tempChilds);
-                //System.out.println("дочерние строки");
-                for (Integer e : pool.tempChilds) {
-                    //System.out.println(Arrays.toString(db.getDataRules().get(e.intValue())));
-                }
-                //System.out.println("////////////////////////////");
 
+                for (Integer e : pool.tempChilds) {
+
+                }
                 for (Integer nextIndex : pool.tempChilds) {
                     //new int[] el = {nextIndex.intValue(), currentIndex};
                     pool.linkedRows.add(new int[]{nextIndex.intValue(), currentIndex});
@@ -48,11 +46,6 @@ public class HandlerDB {
             }
 
         }
-//        for (int[] e : pool.linkedRows) {
-//            System.out.println("Итерация № " + pool.linkedRows.indexOf(e));
-//            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[0])));
-//            System.out.println("строка " + e[0] + " " + Arrays.toString(db.getDataRules().get(e[1])));
-//        }
         return pool.linkedRows;
     }
 
@@ -86,12 +79,8 @@ public class HandlerDB {
                 iterateMeasure = element[0];
             }
 
-            System.out.println(ratio);
-        }
 
-        //ratio = 1/ratio;
-//        System.out.println("преобразование " + measureFrom + "   " + measureTo);
-//        System.out.println("final ratio = " + ratio);
+        }
         return ratio;
     }
 
