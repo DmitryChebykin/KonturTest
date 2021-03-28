@@ -2,6 +2,8 @@ package handlers;
 
 import repository.DB;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,9 +56,9 @@ public class HandlerDB {
         return pool.linkedRows;
     }
 
-    public double getRatio(String measureFrom, String measureTo, DB db) {
-        double ratio = 1.0f;
-        double ratioTemp = 1.0f;
+    public BigDecimal getRatio(String measureFrom, String measureTo, DB db) {
+        BigDecimal ratio = BigDecimal.valueOf(1.0f);
+        BigDecimal ratioTemp = BigDecimal.valueOf(1.0f);
         String iterateMeasure;
         String[] element;
         iterateMeasure = measureTo;
@@ -65,21 +67,22 @@ public class HandlerDB {
         if(temp.size() == 1) temp.add(temp.get(0));
         for (Integer e : temp) {
             element = db.getDataRules().get(e);
-            ratioTemp = Double.parseDouble(element[2]);
+            ratioTemp = BigDecimal.valueOf(Double.parseDouble(element[2]));
             if (temp.get(0).equals(temp.get(1))) {
                 if (iterateMeasure.equals(element[0])) {
                     iterateMeasure = element[1];
-                    ratio = ratio / ratioTemp;
+                    BigDecimal c = ratio.divide(ratioTemp, 15, RoundingMode.HALF_UP);
+                    ratio = ratio.divide(ratioTemp, 15, RoundingMode.HALF_UP);
                 } else {
-                    ratio = ratio * ratioTemp;
+                    ratio = ratio.multiply(ratioTemp);
                     iterateMeasure = element[0];
                 }
                 break;}
             if (iterateMeasure.equals(element[0])) {
                 iterateMeasure = element[1];
-                ratio = ratio / ratioTemp;
+                ratio = ratio.divide(ratioTemp, 15, RoundingMode.HALF_UP);
             } else {
-                ratio = ratio * ratioTemp;
+                ratio = ratio.multiply(ratioTemp);
                 iterateMeasure = element[0];
             }
 

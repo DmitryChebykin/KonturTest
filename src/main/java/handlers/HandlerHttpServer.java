@@ -1,7 +1,6 @@
 package handlers;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -12,7 +11,7 @@ import dto.RespounceDto;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
+
 
 public class HandlerHttpServer implements HttpHandler {
 
@@ -29,7 +28,8 @@ public class HandlerHttpServer implements HttpHandler {
         try {
             if ("POST".equals(exchange.getRequestMethod())) {
                 InputStream is = exchange.getRequestBody();
-                RequestDto body = objectMapper.readValue(exchange.getRequestBody(), RequestDto.class);
+                RequestDto body = new RequestDto();
+                body = objectMapper.readValue(exchange.getRequestBody(), RequestDto.class);
                 RespounceDto respounceDto = controller.convert(body);
                 byte [] res = respounceDto.getBody().getBytes();
                 exchange.sendResponseHeaders(Integer.parseInt(respounceDto.getStatusCode()), res.length);

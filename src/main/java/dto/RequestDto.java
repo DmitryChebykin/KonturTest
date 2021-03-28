@@ -2,6 +2,12 @@ package dto;
 
 public class RequestDto {
 
+    public RequestDto() {
+        from = " ";
+        to = " ";
+
+    }
+
     private String from;
     private String to;
 
@@ -9,7 +15,8 @@ public class RequestDto {
         return from;
     }
 
-    public void setFrom(String from) {
+    public void setFrom() {
+        if(from.equals(null)){this.from = " ";} ;
         this.from = from;
     }
 
@@ -18,6 +25,7 @@ public class RequestDto {
     }
 
     public void setTo(String to) {
+        if(to.equals(null)){this.to = " ";}
         this.to = to;
     }
 }

@@ -81,7 +81,7 @@ public class HandlerDtoRequest {
         Arrays.stream(denominator).forEach(e -> finalTo.add(String.valueOf(tableTypeMeasures.get(e))));
         from = (ArrayList<String>) from.stream().sorted().collect(Collectors.toList());
         to = (ArrayList<String>) to.stream().sorted().collect(Collectors.toList());
-
+        boolean check = Objects.deepEquals(from, to);
         return Objects.deepEquals(from, to);
     }
 

@@ -7,6 +7,7 @@ import handlers.HandlerDB;
 import handlers.HandlerDtoRequest;
 import repository.DB;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class RespounceBuilder {
@@ -46,9 +47,9 @@ public class RespounceBuilder {
         return string == null || string.trim().isEmpty();
     }
 
-    public double fullRatio(ArrayList<String[]> fullFraction) {
+    public BigDecimal fullRatio(ArrayList<String[]> fullFraction) {
 
-        double k = 1f;
+        BigDecimal k = BigDecimal.valueOf(1.d);
 
         LinkedList<String> numerator = new LinkedList();
         LinkedList<String> denominator = new LinkedList();
@@ -66,7 +67,7 @@ public class RespounceBuilder {
                 denumElem = denum;
                 Integer typeDenum = dbObject.getTableTypeMeasures().get(denum);
                 if ((int) typeNum == (int) typeDenum) {
-                    k = k * handlerDB.getRatio(num, denum, dbObject);
+                    if(!num.equals(denum)){k = k.multiply(handlerDB.getRatio(num, denum, dbObject));}
                     denominator.remove(denumElem);
                     numerator.removeFirst();
                     break iLoop;
@@ -98,7 +99,7 @@ public class RespounceBuilder {
         boolean bothFieldEqualLength = handlerDtoRequest.checkConversionEnable(fullFraction);
         boolean bothFieldCountNotEqual = !handlerDtoRequest.checkConversionEnable(fullFraction, dbObject.getTableTypeMeasures());
 
-        if (bothFieldEmpty || (bothFieldEqualLength && bothFieldCountNotEqual)) {
+        if (bothFieldEmpty || (!bothFieldEqualLength && bothFieldKnownMeasure)) {
             outputDto.setStatusCode("404");
             outputDto.setBody("невозможно осуществить такое преобразование");
 
@@ -107,7 +108,7 @@ public class RespounceBuilder {
             outputDto.setBody("используются неизвестные единицы измерения");
         } else {
             outputDto.setStatusCode("200");
-            outputDto.setBody(Double.toString(fullRatio(fullFraction)));
+            outputDto.setBody(fullRatio(fullFraction).toPlainString());
 
         }
 
