@@ -9,30 +9,38 @@ public class HandlerDtoRequest {
         ArrayList<String[]> num = new ArrayList();
         ArrayList<String[]> denom = new ArrayList();
         List exprList = new ArrayList<String[]>();
-        String[] numerator;
-        String[] denominator;
+        String[] numerator = new String[0];
+        String[] denominator = new String[0];
         //someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
         someString = stringMeasuresExpression;
         String numeratorString = null;
         String denominatorString;
         if(someString == null || someString.trim().isEmpty()){
-            exprList.add(new String[]{" "});
-            exprList.add(new String[]{" "});
+            exprList.add(new String[0]);
+            exprList.add(new String[0]);
             return (ArrayList<String[]>) exprList;
         }
         if(someString.contains("/")){
-            String[] arrString = someString.split("/");
+            String[] arrString = someString.split("/", -1);
             numeratorString = arrString[0].replaceAll("\\s|\\*", " ");
             denominatorString = arrString[1].replaceAll("\\s|\\*", " ");
             numeratorString = numeratorString.trim();
             denominatorString = denominatorString.trim();
-            numerator = numeratorString.split("[\\s]+");
-            denominator = denominatorString.split("[\\s]+");
+            if (numeratorString.trim().isEmpty()){
+                numerator = new String[0];
+            }
+            else {numerator = numeratorString.split("[\\s]+");}
+            if (denominatorString.trim().isEmpty()){
+                denominator = new String[0];
+            }
+            else{denominator = denominatorString.split("[\\s]+");}
+
+
         }
         else{numeratorString = someString.replaceAll("\\s|\\*", " ");
             numeratorString = numeratorString.trim();
             numerator = numeratorString.split("[\\s]+");
-            denominator = new String[]{" "};
+            denominator = new String[0];
 
         }
 
@@ -90,8 +98,8 @@ public class HandlerDtoRequest {
             Arrays.stream(f).forEach(num -> dtoUniqueMeasure.add(num));
 
         }
-        boolean res = uniqueMeasure.containsAll(dtoUniqueMeasure);
-        return uniqueMeasure.containsAll(dtoUniqueMeasure);
+        boolean res = uniqueMeasure.containsAll(dtoUniqueMeasure) && !dtoUniqueMeasure.isEmpty();
+        return res;
     }
 }
 

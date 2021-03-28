@@ -84,6 +84,8 @@ public class RespounceBuilder {
         return k;
     }
 
+
+
     public void run() {
 
         outputDto = new RespounceDto();
@@ -91,12 +93,15 @@ public class RespounceBuilder {
         ArrayList<String[]> fullFraction = null;
         ArrayList<String[]> fromParsered = handlerDtoRequest.parse(inputDto.getFrom());
         ArrayList<String[]> toParsered = handlerDtoRequest.parse(inputDto.getTo());
-        fullFraction = handlerDtoRequest.getFullFraction(fromParsered, toParsered);
 
         boolean bothFieldEmpty = isBlankString(inputDto.getFrom()) && isBlankString(inputDto.getTo());
+
+        fullFraction = handlerDtoRequest.getFullFraction(fromParsered, toParsered);
+
         boolean bothFieldKnownMeasure = handlerDtoRequest.checkConversionEnable(fullFraction, dbObject.getUniqueMeasure());
         boolean bothFieldEqualLength = handlerDtoRequest.checkConversionEnable(fullFraction);
         boolean bothFieldCountNotEqual = !handlerDtoRequest.checkConversionEnable(fullFraction, dbObject.getTableTypeMeasures());
+
 
         if (bothFieldEmpty || ((!bothFieldEqualLength || bothFieldCountNotEqual) && bothFieldKnownMeasure)) {
             outputDto.setStatusCode("404");
