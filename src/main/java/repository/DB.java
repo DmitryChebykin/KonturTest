@@ -1,6 +1,7 @@
 package repository;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 
@@ -41,9 +42,9 @@ public class DB {
 
     private List getFilteredRows (String measure){
 
-        List<String[]> filteredList = dataRules.stream().filter(e -> e[0].equals(measure) || e[1].equals(measure)).collect(Collectors.toList());
+        @SuppressWarnings("UnnecessaryLocalVariable") AtomicReference<List<String[]>> filteredList = new AtomicReference<>(dataRules.stream().filter(e -> e[0].equals(measure) || e[1].equals(measure)).collect(Collectors.toList()));
 
-        return filteredList;
+        return filteredList.get();
     }
 
     public ArrayList<Integer> getIndexesFilteredRows(String measure){

@@ -14,30 +14,9 @@ public class MyApplication {
     public void Run(String path) {
 
 
-        FileReader fmr = new FileReader();
 
-        try {
-            fmr.ReadCSVbyScanner("/file.csv");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
             new HttpServer().StartUp();
-            DB dbObject = new DB();
-            dbObject.setDataRules(fmr.records);
-            dbObject.makeGroupsMeasures();
-            dbObject.makeTableTypeMeasures();
-            dbObject.makeUniqueMeasure();
-            HandlerDB handlerDb = new HandlerDB();
-            RequestDto requestDto = new RequestDto();
-            requestDto.setFrom("    км");
-            requestDto.setTo("м ");
-            RespounceBuilder postService = new RespounceBuilder();
-            HandlerDtoRequest handlerDto = new HandlerDtoRequest();
-            postService.setDbObject(dbObject);
-            postService.setHandlerDB(handlerDb);
-            postService.setHandlerDtoRequest(handlerDto);
-            postService.setInputDto(requestDto);
-            postService.run();
+
 
 
 //            ArrayList<String[]> from = new ArrayList<String[]>(Arrays.asList(new String[]{"м", "сутки", "неделя", "удав"}, new String[]{"миля", "аршин", "локоть", "час"}));
@@ -67,4 +46,4 @@ public class MyApplication {
 
     }
 
-}
+

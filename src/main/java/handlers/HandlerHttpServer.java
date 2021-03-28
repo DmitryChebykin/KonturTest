@@ -1,17 +1,22 @@
 package handlers;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import controllers.App;
 import dto.RequestDto;
+import dto.RespounceDto;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 public class HandlerHttpServer implements HttpHandler {
 
-    private ObjectMapper objectMapper;
+    private static ObjectMapper objectMapper;
     private App controller;
 
     public HandlerHttpServer() {
@@ -23,10 +28,11 @@ public class HandlerHttpServer implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         try {
             if ("POST".equals(exchange.getRequestMethod())) {
+                InputStream is = exchange.getRequestBody();
                 RequestDto body = objectMapper.readValue(exchange.getRequestBody(), RequestDto.class);
-                String [] result = controller.convert(body);
-                byte [] res = "3.6".getBytes();
-                exchange.sendResponseHeaders(200, res.length);
+                RespounceDto respounceDto = controller.convert(body);
+                byte [] res = respounceDto.getBody().getBytes();
+                exchange.sendResponseHeaders(Integer.parseInt(respounceDto.getStatusCode()), res.length);
                 OutputStream os = exchange.getResponseBody();
                 os.write(res);
                 os.close();
