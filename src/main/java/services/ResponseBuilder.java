@@ -8,6 +8,7 @@ import repository.DB;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 //endregion
 
@@ -119,7 +120,7 @@ public class ResponseBuilder {
             }
         } else {
             outputDto.setStatusCode("200");
-            outputDto.setBody(fullRatio(fullFraction).setScale(15, BigDecimal.ROUND_HALF_UP).toPlainString());
+            outputDto.setBody(fullRatio(fullFraction).setScale(15, RoundingMode.HALF_UP).toPlainString());
         }
     }
 }
