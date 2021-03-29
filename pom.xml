@@ -5,13 +5,31 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>KonturTest</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>universal-converter-1.0.0</artifactId>
+    <version></version>
+    <packaging>jar</packaging>
+
+
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <h2.version>1.4.190</h2.version>
+
+        <!--Project settings-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!--Libs-->
+
+
+        <!--Plugins-->
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
+        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
+        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+        <sonar-maven-plugin.version>2.7.1</sonar-maven-plugin.version>
+
     </properties>
 
     <dependencies>
@@ -31,5 +49,59 @@
             <artifactId>jackson-annotations</artifactId>
             <version>2.12.2</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.3.0</version>
+            <type>maven-plugin</type>
+        </dependency>
     </dependencies>
+
+
+    <build>
+         <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!-- COMPILER (Java10+ and lombok compatible) -->
+            <!-- JAR with dependencies -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!--<mainClass>io.hexlet.boilerplate.HelloWorld</mainClass>-->
+                            <mainClass>Program</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

@@ -5,35 +5,30 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import controllers.App;
 import dto.RequestDto;
-import dto.RespounceDto;
+import dto.ResponseDto;
 import repository.DB;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 
 public class HandlerHttpServer implements HttpHandler {
 
-    private static ObjectMapper objectMapper;
     private final DB dbObject;
     private App controller;
 
     public HandlerHttpServer(DB dbObject) {
         this.dbObject = dbObject;
-        objectMapper = new ObjectMapper();
         controller = new App();
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) {
         try {
             if ("POST".equals(exchange.getRequestMethod())) {
-                InputStream is = exchange.getRequestBody();
-                RequestDto body = new RequestDto();
-                body = objectMapper.readValue(exchange.getRequestBody(), RequestDto.class);
-                RespounceDto respounceDto = controller.convert(body, dbObject);
-                byte [] res = respounceDto.getBody().getBytes();
-                exchange.sendResponseHeaders(Integer.parseInt(respounceDto.getStatusCode()), res.length);
+                ObjectMapper objectMapper = new ObjectMapper();
+                RequestDto body = objectMapper.readValue(exchange.getRequestBody(), RequestDto.class);
+                ResponseDto responseDto = controller.convert(body, dbObject);
+                byte [] res = responseDto.getBody().getBytes();
+                exchange.sendResponseHeaders(Integer.parseInt(responseDto.getStatusCode()), res.length);
                 OutputStream os = exchange.getResponseBody();
                 os.write(res);
                 os.close();

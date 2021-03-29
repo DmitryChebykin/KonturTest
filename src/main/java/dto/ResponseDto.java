@@ -1,6 +1,6 @@
 package dto;
 
-public class RespounceDto {
+public class ResponseDto {
     public String getStatusCode() {
         return statusCode;
     }

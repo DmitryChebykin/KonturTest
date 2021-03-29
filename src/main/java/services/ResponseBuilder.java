@@ -1,15 +1,17 @@
 package services;
 //region Description imports
 import dto.RequestDto;
-import dto.RespounceDto;
+import dto.ResponseDto;
 import handlers.HandlerDB;
 import handlers.HandlerDtoRequest;
 import repository.DB;
+
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.*;
 //endregion
 
-public class RespounceBuilder {
+public class ResponseBuilder {
 
     //region Description: Setters and Getters
     public void setDbObject(DB dbObject) {
@@ -18,7 +20,7 @@ public class RespounceBuilder {
 
     DB dbObject;
 
-    public RespounceDto getOutputDto() {
+    public ResponseDto getOutputDto() {
         return outputDto;
     }
 
@@ -28,7 +30,7 @@ public class RespounceBuilder {
         this.inputDto = inputDto;
     }
 
-    RespounceDto outputDto;
+    ResponseDto outputDto;
 
     public void setHandlerDtoRequest(HandlerDtoRequest handlerDtoRequest) {
         this.handlerDtoRequest = handlerDtoRequest;
@@ -84,17 +86,15 @@ public class RespounceBuilder {
         return k;
     }
 
-
-
     public void run() {
 
-        outputDto = new RespounceDto();
+        outputDto = new ResponseDto();
 
         ArrayList<String[]> fullFraction = null;
-        ArrayList<String[]> fromParsered = handlerDtoRequest.parse(inputDto.getFrom());
-        ArrayList<String[]> toParsered = handlerDtoRequest.parse(inputDto.getTo());
+        ArrayList<String[]> fromParsed = handlerDtoRequest.parse(inputDto.getFrom());
+        ArrayList<String[]> toParsed = handlerDtoRequest.parse(inputDto.getTo());
 
-        fullFraction = handlerDtoRequest.getFullFraction(fromParsered, toParsered);
+        fullFraction = handlerDtoRequest.getFullFraction(fromParsed, toParsed);
 
         boolean bothFieldEmpty = isBlankString(inputDto.getFrom()) && isBlankString(inputDto.getTo());
         boolean bothFieldKnownMeasure = handlerDtoRequest.checkConversionEnable(fullFraction, dbObject.getUniqueMeasure());
@@ -104,18 +104,22 @@ public class RespounceBuilder {
 
         if (bothFieldEmpty || ((!bothFieldEqualLength || bothFieldCountNotEqual) && bothFieldKnownMeasure)) {
             outputDto.setStatusCode("404");
-            outputDto.setBody("невозможно осуществить такое преобразование");
+            try {
+                outputDto.setBody(new String("невозможно осуществить такое преобразование".getBytes("UTF-8"), System.getProperty("file.encoding")));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
         } else if (!bothFieldKnownMeasure) {
             outputDto.setStatusCode("400");
-            outputDto.setBody("используются неизвестные единицы измерения");
+            try {
+                outputDto.setBody(new String("используются неизвестные единицы измерения".getBytes("UTF-8"),System.getProperty("file.encoding")));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         } else {
             outputDto.setStatusCode("200");
             outputDto.setBody(fullRatio(fullFraction).setScale(15, BigDecimal.ROUND_HALF_UP).toPlainString());
-
         }
-
-
     }
-
 }

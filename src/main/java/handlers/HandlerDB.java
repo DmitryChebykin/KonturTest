@@ -8,37 +8,31 @@ import java.util.stream.Collectors;
 public class HandlerDB {
 
     public List<int[]> getConversionRows(String measureFrom, String measureTo, DB db) {
-        LinkedList<Integer> queue = new LinkedList<Integer>();
+        LinkedList<Integer> queue = new LinkedList<>();
         HashMap<Integer, String> stack = new HashMap<>();
         //detect rows on first iterate
         db.getIndexesFilteredRows(measureFrom).forEach(e -> {
             queue.add(e);
             stack.put(e, measureFrom);
         });
-        String currentMsr = measureFrom;
+
         Pool pool = new Pool();
-        pool.linkedRows.add(new int[]{queue.getFirst().intValue(), queue.getFirst().intValue()});
+        pool.linkedRows.add(new int[]{queue.getFirst(), queue.getFirst()});
         while (queue.size() != 0) {
-            pool.tempChilds.clear();
+            pool.tempChildren.clear();
             int currentIndex = queue.getFirst();
-            if (Arrays.stream((db.getDataRules().get(currentIndex))).anyMatch(measureTo::equals)) {
-                pool.linkedRows.add(new int[]{queue.getFirst().intValue(), queue.getFirst().intValue()});
+            if (Arrays.asList((db.getDataRules().get(currentIndex))).contains(measureTo)) {
+                pool.linkedRows.add(new int[]{queue.getFirst(), queue.getFirst()});
                 queue.clear();
             } else {
                 queue.removeFirst();
-
                 String otherMeasure = db.getPair(stack.get(currentIndex), currentIndex);
-                pool.tempChilds.addAll(db.getIndexesFilteredRows(otherMeasure));
-                int finalCurrentIndex = currentIndex;
-                pool.tempChilds.removeIf(number -> number == finalCurrentIndex);
-                queue.addAll(pool.tempChilds);
+                pool.tempChildren.addAll(db.getIndexesFilteredRows(otherMeasure));
+                pool.tempChildren.removeIf(number -> number == currentIndex);
+                queue.addAll(pool.tempChildren);
 
-                for (Integer e : pool.tempChilds) {
-
-                }
-                for (Integer nextIndex : pool.tempChilds) {
-                    //new int[] el = {nextIndex.intValue(), currentIndex};
-                    pool.linkedRows.add(new int[]{nextIndex.intValue(), currentIndex});
+                for (Integer nextIndex : pool.tempChildren) {
+                    pool.linkedRows.add(new int[]{nextIndex, currentIndex});
                     stack.put(nextIndex, otherMeasure);
                 }
             }
@@ -49,7 +43,7 @@ public class HandlerDB {
 
     public BigDecimal getRatio(String measureFrom, String measureTo, DB db) {
         BigDecimal ratio = BigDecimal.valueOf(1.0f);
-        BigDecimal ratioTemp = BigDecimal.valueOf(1.0f);
+        BigDecimal ratioTemp;
         String iterateMeasure;
         String[] element;
         iterateMeasure = measureTo;
@@ -61,12 +55,9 @@ public class HandlerDB {
             ratioTemp = BigDecimal.valueOf(Double.parseDouble(element[2]));
             if (temp.get(0).equals(temp.get(1))) {
                 if (iterateMeasure.equals(element[0])) {
-                    iterateMeasure = element[1];
-                    BigDecimal c = ratio.divide(ratioTemp, 15, RoundingMode.HALF_UP);
                     ratio = ratio.divide(ratioTemp, 15, RoundingMode.HALF_UP);
                 } else {
                     ratio = ratio.multiply(ratioTemp);
-                    iterateMeasure = element[0];
                 }
                 break;}
             if (iterateMeasure.equals(element[0])) {
@@ -76,15 +67,13 @@ public class HandlerDB {
                 ratio = ratio.multiply(ratioTemp);
                 iterateMeasure = element[0];
             }
-
-
         }
         return ratio;
     }
 
     public ArrayList<Integer> normaliseLinkedRows(LinkedList<int[]> linkedRows) {
         int[] array;
-        ArrayList<Integer> normalise = new ArrayList<Integer>();
+        ArrayList<Integer> normalise = new ArrayList<>();
         array = linkedRows.removeLast();
 
         normalise.add(array[0]);
@@ -92,31 +81,25 @@ public class HandlerDB {
         if (normalise.isEmpty()) {
             return normalise;
         } else {
-            int[] finalArray = array;
-            List<int[]> nextElenent = linkedRows.stream().filter(e -> e[0] == finalArray[0]).collect(Collectors.toList());
-            while (!(tem1 == 0) && nextElenent.size() > 0 ) {
-                normalise.add(nextElenent.get(0)[1]);
-                int i = nextElenent.get(0)[1];
-                nextElenent = linkedRows.stream().filter(e -> e[0] == i).collect(Collectors.toList());
-                if (nextElenent.isEmpty()) break;
-                tem1 = linkedRows.indexOf(nextElenent.get(0));
-
+            List<int[]> nextElement = linkedRows.stream().filter(e -> e[0] == array[0]).collect(Collectors.toList());
+            while (!(tem1 == 0) && nextElement.size() > 0 ) {
+                normalise.add(nextElement.get(0)[1]);
+                int i = nextElement.get(0)[1];
+                nextElement = linkedRows.stream().filter(e -> e[0] == i).collect(Collectors.toList());
+                if (nextElement.isEmpty()) break;
+                tem1 = linkedRows.indexOf(nextElement.get(0));
             }
-
             return normalise;
         }
-
-
     }
 
     private class Pool {
         List<int[]> linkedRows;
-        List<Integer> tempChilds;
+        List<Integer> tempChildren;
 
         public Pool() {
-            linkedRows = new LinkedList<int[]>();
-            tempChilds = new ArrayList<Integer>();
+            linkedRows = new LinkedList<>();
+            tempChildren = new ArrayList<>();
         }
     }
-
 }

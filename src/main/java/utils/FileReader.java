@@ -8,11 +8,8 @@ public class FileReader {
 
     public ArrayList<String[]> records;
 
-
-    public void ReadCSVbyScanner(String FileMeasurePath) throws FileNotFoundException {
-        List<String[]> records = new ArrayList<>();
-
-        FileMeasurePath = "file.csv";
+    public void ReadCSVbyScanner(String FileMeasurePath) {
+        records = new ArrayList<>();
         try {
             Scanner scanner = new Scanner(new File(FileMeasurePath));
             while (scanner.hasNextLine()) {
@@ -24,20 +21,14 @@ public class FileReader {
                     String data = dataScanner.next();
                     if (index < 3) {
                         line[index] = data;
-
                     } else
                         System.out.println("invalid data::" + data);
                     index++;
                 }
-
                 records.add(line);
             }
-            this.records = (ArrayList<String[]>) records;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-
     }
-
 }
