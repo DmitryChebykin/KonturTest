@@ -12,7 +12,7 @@ public class HttpServer {
     public void StartUp(DB dbObject) {
 
         try {
-            com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(8081), 0);
+            com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(80), 0);
             HttpContext httpContext;
             httpContext = server.createContext("/convert", new HandlerHttpServer(dbObject));
             server.setExecutor(null);
