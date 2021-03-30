@@ -32,7 +32,20 @@
             <artifactId>annotations</artifactId>
             <version>20.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>68.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.ibm.icu/icu4j -->
+        <dependency>
+            <groupId>com.google.jimfs</groupId>
+            <artifactId>jimfs</artifactId>
+            <version>1.1</version>
+        </dependency>
     </dependencies>
+
+
     <build>
         <finalName>universal-converter</finalName>
         <plugins>
@@ -76,7 +89,6 @@
                         <descriptor>src/main/assembly/assembly.xml</descriptor>
                     </descriptors>
                 </configuration>
-
                 <executions>
                     <execution>
                         <id>assemble-all</id>
@@ -84,13 +96,9 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-
                     </execution>
                 </executions>
-
-
             </plugin>
         </plugins>
     </build>
-
 </project>
