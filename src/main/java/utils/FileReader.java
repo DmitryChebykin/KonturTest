@@ -14,15 +14,14 @@ public class FileReader {
 
     public void ReadCSVbyScanner(String fileMeasurePath) {
         records = new ArrayList<>();
-        System.out.println("кодировка " + System.getProperty("file.encoding"));
+        System.out.println("кодировка  системы" + System.getProperty("file.encoding"));
         try {
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fileMeasurePath));
             CharsetDetector cd = new CharsetDetector();
             cd.setText(bis);
             CharsetMatch cm = cd.detect();
-            transform(new File(fileMeasurePath), cm.getName(),new File(fileMeasurePath + "1"),StandardCharsets.UTF_8.toString());
-
-            InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(fileMeasurePath+ "1"), StandardCharsets.UTF_8);
+            System.out.println("кодировка  файла " + cm.getName());
+            InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(fileMeasurePath), cm.getName());
 
             BufferedReader reader = new BufferedReader(inputStreamReader);
             while (true){
@@ -38,14 +37,4 @@ public class FileReader {
         records.forEach(arr -> System.out.println(Arrays.toString(arr)));
     }
 
-    public void transform(File source, String srcEncoding, File target, String tgtEncoding) throws IOException {
-        try (
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(source), srcEncoding));
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), tgtEncoding)); ) {
-            char[] buffer = new char[16384];
-            int read;
-            while ((read = br.read(buffer)) != -1)
-                bw.write(buffer, 0, read);
-        }
-    }
 }
