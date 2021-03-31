@@ -7,11 +7,11 @@ public class HandlerDtoRequest {
     public ArrayList<String[]> parse(String stringMeasuresExpression) {
         String someString;
         ArrayList<String[]> exprList = new ArrayList<>();
-        String[] numerator = new String[0];
-        String[] denominator = new String[0];
+        String[] numerator;
+        String[] denominator;
         //someString = "   км * м *     с* ч /     миля * попугай *     удав * сажень";
         someString = stringMeasuresExpression;
-        String numeratorString = null;
+        String numeratorString;
         String denominatorString;
         if(someString == null || someString.trim().isEmpty()){
             exprList.add(new String[0]);
@@ -24,11 +24,11 @@ public class HandlerDtoRequest {
             denominatorString = arrString[1].replaceAll("\\s|\\*", " ");
             numeratorString = numeratorString.trim();
             denominatorString = denominatorString.trim();
-            if (numeratorString.trim().isEmpty()){
+            if (numeratorString.trim().isEmpty() || numeratorString.trim().equals("1")){
                 numerator = new String[0];
             }
             else {numerator = numeratorString.split("[\\s]+");}
-            if (denominatorString.trim().isEmpty()){
+            if (denominatorString.trim().isEmpty() || denominatorString.trim().equals("1")){
                 denominator = new String[0];
             }
             else{denominator = denominatorString.split("[\\s]+");}
@@ -39,10 +39,8 @@ public class HandlerDtoRequest {
             denominator = new String[0];
 
         }
-
         exprList.add(numerator);
         exprList.add(denominator);
-
         return exprList;
     }
 
@@ -54,12 +52,12 @@ public class HandlerDtoRequest {
         System.arraycopy(toParsed.get(1), 0, numerator, fromParsed.get(0).length, toParsed.get(1).length);
         numerator = Arrays.stream(numerator).filter(s -> !s.equals(" ")).toArray(String[]::new);
 
-        String[] denomenator = Arrays.copyOf(fromParsed.get(1), fromParsed.get(1).length + toParsed.get(0).length);
-        System.arraycopy(toParsed.get(0), 0, denomenator, fromParsed.get(1).length, toParsed.get(0).length);
-        denomenator = Arrays.stream(denomenator).filter(s -> !s.equals(" ")).toArray(String[]::new);
+        String[] denominator = Arrays.copyOf(fromParsed.get(1), fromParsed.get(1).length + toParsed.get(0).length);
+        System.arraycopy(toParsed.get(0), 0, denominator, fromParsed.get(1).length, toParsed.get(0).length);
+        denominator = Arrays.stream(denominator).filter(s -> !s.equals(" ")).toArray(String[]::new);
 
         fullFraction.add(0, numerator);
-        fullFraction.add(1, denomenator);
+        fullFraction.add(1, denominator);
         return fullFraction;
     }
 
@@ -80,7 +78,6 @@ public class HandlerDtoRequest {
         Arrays.stream(denominator).forEach(e -> finalTo.add(String.valueOf(tableTypeMeasures.get(e))));
         from = (ArrayList<String>) from.stream().sorted().collect(Collectors.toList());
         to = (ArrayList<String>) to.stream().sorted().collect(Collectors.toList());
-        boolean check = Objects.deepEquals(from, to);
         return Objects.deepEquals(from, to);
     }
 
